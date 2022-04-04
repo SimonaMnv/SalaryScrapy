@@ -10,8 +10,6 @@ from salaryscrape.salaryscrape.spiders.glassdoor_spider import GlassDoor
 
 app = Flask(__name__)
 
-spiders = ['glassdoor_spider']
-
 
 @app.route('/')
 def index():
