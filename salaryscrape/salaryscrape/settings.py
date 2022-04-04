@@ -10,8 +10,8 @@ import requests
 
 BOT_NAME = 'salaryscrape'
 
-SPIDER_MODULES = ['salaryscrape.spiders']
-NEWSPIDER_MODULE = 'salaryscrape.spiders'
+SPIDER_MODULES = ['salaryscrape.salaryscrape.spiders']
+NEWSPIDER_MODULE = 'salaryscrape.salaryscrape.spiders'
 
 SPIDER_LOADER_CLASS = "scrapy.spiderloader.SpiderLoader"
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
