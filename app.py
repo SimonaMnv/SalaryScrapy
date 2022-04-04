@@ -1,9 +1,9 @@
-import os
-from flask import Flask, request, abort, jsonify
+from flask import Flask, request, jsonify
 from twisted.internet import reactor
 from scrapy.crawler import CrawlerRunner
 from scrapy.utils.log import configure_logging
 
+from scrapy.settings import Settings
 from salaryscrape.salaryscrape.spiders.glassdoor_spider import GlassDoor
 
 app = Flask(__name__)
@@ -17,10 +17,13 @@ def index():
 
 
 @app.route('/crawl', methods=['GET', 'POST'])
-def get_data():
+def get_data(response):
+    settings = Settings()
+    print("Proxy IP:", response.headers)
+
     configure_logging({'LOG_FORMAT': '%(levelname)s: %(message)s'})
 
-    runner = CrawlerRunner()
+    runner = CrawlerRunner(settings)
     d = runner.crawl(GlassDoor)
     d.addBoth(lambda _: reactor.stop())
     reactor.run()
@@ -29,4 +32,4 @@ def get_data():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.environ.get('PORT')))
+    app.run(host='0.0.0.0', port=1234)
