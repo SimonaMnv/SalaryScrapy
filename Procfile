@@ -1,2 +1,1 @@
-web: python bind_port.py; scrapyd
-clock: python app.py
+web: python bind_port.py; scrapyd; python app.py
