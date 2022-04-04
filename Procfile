@@ -1,1 +1,1 @@
-web: scrapyd
+web: python bind_port.py; scrapyd
