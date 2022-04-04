@@ -28,6 +28,7 @@ This project uses a connection to AWS DynamoDB to store the data in.
 
 # Scheduler
 Created a scheduler that starts the crawler. Can be found in `scheduler.py`
+For this scrapyd, scrapyd-client and herokuify_scrapyd were installed
 
 
 # TODO: 
