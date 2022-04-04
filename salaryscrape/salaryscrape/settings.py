@@ -30,27 +30,15 @@ DOWNLOAD_DELAY = 2
 # CONCURRENT_REQUESTS_PER_IP = 16
 
 # proxy settings
-# Retry many times since proxies often fail
-RETRY_TIMES = 10
-# Retry on most error codes since proxies fail for different reasons
-RETRY_HTTP_CODES = [500, 503, 504, 400, 403, 404, 408]
+ROTATING_PROXY_LIST = [
+    '136.243.174.243:1080',
+    '88.250.55.132:8080',
+]
 
 DOWNLOADER_MIDDLEWARES = {
-    'scrapy.downloadermiddlewares.retry.RetryMiddleware': 90,
-    'scrapy_proxies.RandomProxy': 100,
-    'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
+    'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
+    'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
 }
-
-PROXY_LIST = 'settings_proxy_list.txt'
-
-# Proxy mode
-# 0 = Every requests have different proxy
-# 1 = Take only one proxy from the list and assign it to every requests
-# 2 = Put a custom proxy to use in the settings
-PROXY_MODE = 0
-
-# If proxy mode is 2 uncomment this sentence :
-#CUSTOM_PROXY = "http://host1:port"
 
 # Disable cookies (enabled by default)
 # COOKIES_ENABLED = False
