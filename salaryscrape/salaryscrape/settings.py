@@ -6,7 +6,7 @@
 #     https://docs.scrapy.org/en/latest/topics/settings.html
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-from utils.proxies import get_proxies
+import requests
 
 BOT_NAME = 'salaryscrape'
 
@@ -33,6 +33,15 @@ DOWNLOAD_DELAY = 1
 
 # PROXY settings
 ROTATING_PROXY_PAGE_RETRY_TIMES = 100
+
+
+def get_proxies(proxy_endpoint):
+    r = requests.get(proxy_endpoint)
+    proxies = r.text.split("\n")
+    proxies = [x for x in proxies if x]
+    print("Proxies:", proxies)
+    return proxies
+
 
 ROTATING_PROXY_LIST = get_proxies("https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt")
 
