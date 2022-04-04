@@ -1,13 +1,24 @@
-# Define your item pipelines here
-#
-# Don't forget to add your pipeline to the ITEM_PIPELINES setting
-# See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
+import boto3
 
-
-# useful for handling different item types with a single interface
-from itemadapter import ItemAdapter
+from spiders.secrets_config import config
 
 
 class SalaryscrapePipeline:
+    def __init__(self):
+        self.session = boto3.Session(region_name='eu-west-3',
+                                     aws_access_key_id=config['dynamoDB_access_key'],
+                                     aws_secret_access_key=config["dynamoDB_secret_access_key"])
+        self.dynamodb = self.session.resource('dynamodb')
+        self.tablename = "glassdoor"
+
     def process_item(self, item, spider):
+        """ write the data to dynamodb """
+        table = self.dynamodb.Table(self.tablename)
+        table.meta.client.get_waiter('table_exists').wait(TableName=self.tablename)
+
+        table.put_item(
+            tableName=self.tablename,
+            Item={k: v for k, v in item.items()}
+        )
+
         return item

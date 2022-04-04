@@ -22,7 +22,8 @@ that are provided in ``static_files/``
    2. Go in IAM and create a new User group and under attach permissions policies use only "AmazonDynamoDBFullAccess" 
    also create a user and add him to that group
    3. The above steps will also give you the Access key ID & Secret key access that is needed in order to host this in Heroku
-   4. 
+   add those in environment variables in Heroku
+   4. The pipeline that stores the data in herokuDB along with the connection intialization is in `pipelines.py`
 
 # TODO: 
 1. Unit tests
