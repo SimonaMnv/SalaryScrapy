@@ -26,9 +26,8 @@ This project uses a connection to AWS DynamoDB to store the data in.
    add those in environment variables in Heroku
    4. The pipeline that stores the data in herokuDB along with the connection initialization is in `pipelines.py`
 
-# Scheduler
-Created a scheduler that starts the crawler. Can be found in `scheduler.py`
-For this scrapyd, scrapyd-client and herokuify_scrapyd were installed
+# Scrapy & Flask 
+
 
 
 # TODO: 
