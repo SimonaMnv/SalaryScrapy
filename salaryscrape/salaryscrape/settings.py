@@ -28,7 +28,7 @@ CONCURRENT_REQUESTS = 64
 # See also autothrottle settings and docs
 DOWNLOAD_DELAY = 0
 # The download delay setting will honor only one of:
-# CONCURRENT_REQUESTS_PER_DOMAIN = 16
+CONCURRENT_REQUESTS_PER_DOMAIN = 64
 # CONCURRENT_REQUESTS_PER_IP = 16
 
 # PROXY settings
