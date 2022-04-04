@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, request, jsonify
 from twisted.internet import reactor
 from scrapy.crawler import CrawlerRunner
@@ -32,4 +34,4 @@ def get_data(response):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=1234)
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT')))
