@@ -1,25 +1,29 @@
-import pytz
-import requests
-import subprocess
-from apscheduler.schedulers.twisted import TwistedScheduler
-from twisted.internet import reactor
+import os
+from subprocess import call
+
+from flask_apscheduler import APScheduler
+import datetime
+from flask import Flask, jsonify
+
+app = Flask(__name__)
+
+scheduler = APScheduler()
+scheduler.init_app(app)
+scheduler.start()
 
 
-def send_request():
-    requests.post(
-        "https://salaryscrape.herokuapp.com/schedule.json", data={
-            "project": "salaryscrape",
-            "spider": "glassdoor_spider"
-        })
+def run_spider():
+    """ run the spider inside the heroku container """
+    call(["scrapy", 'crawl', 'glassdoor_spider'], cwd='/app/salaryscrape')
 
 
-if __name__ == "__main__":
-    """ start the crawler every monday at 6 AM UTC time """
+@app.route('/crawl')
+def add_tasks():
+    """ create a scheduler to execute the spider weekly - one unique id running at a time """
+    # TODO: change this to week=2
+    app.apscheduler.add_job(func=run_spider, trigger='cron', minute='*/5', id='glassdoor_spider_crawl_job')
+    return jsonify({str(datetime.datetime.now()): 'crawl job started'}), 200
 
-    subprocess.run("scrapyd-deploy", shell=True, universal_newlines=True)
 
-    scheduler = TwistedScheduler(timezone=pytz.timezone('UTC'))
-    scheduler.add_job(send_request, 'cron', day_of_week='mon-fri', minute='*/2')
-    scheduler.start()
-
-    reactor.run()
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT')))

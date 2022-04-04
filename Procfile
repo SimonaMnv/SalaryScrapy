@@ -1,1 +1,1 @@
-web: python bind_port.py; scrapyd
+web: gunicorn --log-file=- app:app

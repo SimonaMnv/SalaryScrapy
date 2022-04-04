@@ -6,28 +6,53 @@
 #     https://docs.scrapy.org/en/latest/topics/settings.html
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
+import requests
 
 BOT_NAME = 'salaryscrape'
 
-SPIDER_MODULES = ['salaryscrape.spiders']
-NEWSPIDER_MODULE = 'salaryscrape.spiders'
+SPIDER_MODULES = ['salaryscrape.salaryscrape.spiders']
+NEWSPIDER_MODULE = 'salaryscrape.salaryscrape.spiders'
 
+SPIDER_LOADER_CLASS = "scrapy.spiderloader.SpiderLoader"
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 # USER_AGENT = 'salaryscrape (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
+LOG_ENABLED = True
+LOG_LEVEL = "INFO"
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-# CONCURRENT_REQUESTS = 32
+CONCURRENT_REQUESTS = 64
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 2
+DOWNLOAD_DELAY = 0
 # The download delay setting will honor only one of:
-# CONCURRENT_REQUESTS_PER_DOMAIN = 16
+CONCURRENT_REQUESTS_PER_DOMAIN = 64
 # CONCURRENT_REQUESTS_PER_IP = 16
+
+# PROXY settings
+ROTATING_PROXY_PAGE_RETRY_TIMES = 100
+
+
+def get_proxies(proxy_endpoint):
+    r = requests.get(proxy_endpoint)
+    proxies = r.text.split("\n")
+    proxies = [x for x in proxies if x]
+    print("Proxies:", proxies)
+    return proxies
+
+
+ROTATING_PROXY_LIST = get_proxies("https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt")
+
+USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64)"
+
+DOWNLOADER_MIDDLEWARES = {
+    'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
+    'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
+}
 
 # Disable cookies (enabled by default)
 # COOKIES_ENABLED = False
@@ -61,9 +86,9 @@ DOWNLOAD_DELAY = 2
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-# ITEM_PIPELINES = {
-#    'salaryscrape.pipelines.SalaryscrapePipeline': 300,
-# }
+ITEM_PIPELINES = {
+   'salaryscrape.pipelines.SalaryscrapePipeline': 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html

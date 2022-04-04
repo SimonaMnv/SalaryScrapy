@@ -6,6 +6,7 @@ from scrapy.spiders.init import InitSpider
 from ..items import CompanySalary
 
 import logging
+import re
 
 from .secrets_config import config
 
@@ -64,8 +65,10 @@ class GlassDoor(InitSpider):
 
         main_page = json.loads(response.xpath('//script[@type="application/ld+json"]//text()').extract_first())
 
+        print(f'crawling URL: {response.url}')
+
         salary['timestamp'] = str(datetime.datetime.now())
-        salary['location'] = main_page["occupationLocation"][0]["name"]
+        salary['location'] = re.search('(?:.*?\/){4}([^\/-]+)', str(response.url))[1]
         salary['job_title'] = main_page["name"]
         salary['job_percentile10_payment'] = main_page["estimatedSalary"][0]["percentile10"]
         salary['job_median_payment'] = main_page["estimatedSalary"][0]["median"]
@@ -73,4 +76,5 @@ class GlassDoor(InitSpider):
         salary['location_currency'] = main_page["estimatedSalary"][0]["currency"]
         salary['sample_size'] = main_page["sampleSize"]
 
+        print(f'Item crawled: {salary}')
         yield salary
