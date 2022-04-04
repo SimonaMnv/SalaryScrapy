@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, abort
+from flask import Flask, request, abort, jsonify
 from twisted.internet import reactor
 from scrapy.crawler import CrawlerRunner
 from scrapy.utils.log import configure_logging
@@ -13,7 +13,7 @@ spiders = ['glassdoor_spider']
 
 @app.route('/')
 def index():
-    return '200'
+    return jsonify({'ip': request.remote_addr}), 200
 
 
 @app.route('/crawl', methods=['GET', 'POST'])
