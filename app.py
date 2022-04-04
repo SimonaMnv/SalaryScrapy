@@ -1,25 +1,34 @@
-import pytz
-import requests
-import subprocess
-from apscheduler.schedulers.twisted import TwistedScheduler
+import os
+from flask import Flask, request, abort
 from twisted.internet import reactor
+from scrapy.crawler import CrawlerRunner
+from scrapy.utils.log import configure_logging
+
+from salaryscrape.salaryscrape.spiders.glassdoor_spider import GlassDoor
+
+app = Flask(__name__)
+
+spiders = ['glassdoor_spider']
 
 
-def send_request():
-    requests.post(
-        "https://salaryscrape.herokuapp.com/schedule.json", data={
-            "project": "salaryscrape",
-            "spider": "glassdoor_spider"
-        })
+@app.route('/')
+def index():
+    return '200'
 
 
-if __name__ == "__main__":
-    """ start the crawler every monday at 6 AM UTC time """
+@app.route('/crawl', methods=['GET', 'POST'])
+def get_data():
+    if request.method == 'POST':
+        content = request.get_json(silent=True)
+        if content['spider'] in spiders:
+            configure_logging({'LOG_FORMAT': '%(levelname)s: %(message)s'})
+            runner = CrawlerRunner()
+            d = runner.crawl(GlassDoor)
+            d.addBoth(lambda _: reactor.stop())
+            reactor.run()
+            return 'Scraping...'
+        return abort(404)
 
-    subprocess.run("scrapyd-deploy", shell=True, universal_newlines=True)
 
-    scheduler = TwistedScheduler(timezone=pytz.timezone('UTC'))
-    scheduler.add_job(send_request, 'cron', day_of_week='mon-fri', minute='*/2')
-    scheduler.start()
-
-    reactor.run()
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT')))

@@ -1,1 +1,1 @@
-web: python bind_port.py; scrapyd; python app.py
+web: gunicorn app:app
