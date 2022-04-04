@@ -6,6 +6,7 @@
 #     https://docs.scrapy.org/en/latest/topics/settings.html
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
+import requests
 
 BOT_NAME = 'salaryscrape'
 
@@ -16,7 +17,7 @@ NEWSPIDER_MODULE = 'salaryscrape.spiders'
 # USER_AGENT = 'salaryscrape (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 # CONCURRENT_REQUESTS = 32
@@ -29,11 +30,21 @@ DOWNLOAD_DELAY = 2
 # CONCURRENT_REQUESTS_PER_DOMAIN = 16
 # CONCURRENT_REQUESTS_PER_IP = 16
 
-# proxy settings
-ROTATING_PROXY_LIST = [
-    '136.243.174.243:1080',
-    '88.250.55.132:8080',
-]
+# PROXY settings
+ROTATING_PROXY_PAGE_RETRY_TIMES = 100
+
+
+def get_proxies(proxy_endpoint):
+    r = requests.get(proxy_endpoint)
+    proxies = r.text.split("\n")
+    proxies = [x for x in proxies if x]
+    print("Proxies:", proxies)
+    return proxies
+
+
+ROTATING_PROXY_LIST = get_proxies("https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt")
+
+USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64)"
 
 DOWNLOADER_MIDDLEWARES = {
     'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
