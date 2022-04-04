@@ -18,16 +18,14 @@ def index():
 
 @app.route('/crawl', methods=['GET', 'POST'])
 def get_data():
-    if request.method == 'POST':
-        content = request.get_json(silent=True)
-        if content['spider'] in spiders:
-            configure_logging({'LOG_FORMAT': '%(levelname)s: %(message)s'})
-            runner = CrawlerRunner()
-            d = runner.crawl(GlassDoor)
-            d.addBoth(lambda _: reactor.stop())
-            reactor.run()
-            return 'Scraping...'
-        return abort(404)
+    configure_logging({'LOG_FORMAT': '%(levelname)s: %(message)s'})
+
+    runner = CrawlerRunner()
+    d = runner.crawl(GlassDoor)
+    d.addBoth(lambda _: reactor.stop())
+    reactor.run()
+
+    return 'Scraping...'
 
 
 if __name__ == '__main__':
