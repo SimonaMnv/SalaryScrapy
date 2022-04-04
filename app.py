@@ -22,7 +22,7 @@ def index():
 def get_data():
     configure_logging({'LOG_FORMAT': '%(levelname)s: %(message)s'})
 
-    runner = CrawlerRunner(get_project_settings)
+    runner = CrawlerRunner(get_project_settings())
     d = runner.crawl(GlassDoor)
     d.addBoth(lambda _: reactor.stop())
     reactor.run()
