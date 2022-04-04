@@ -41,3 +41,5 @@ typing-extensions==4.1.1
 urllib3==1.26.9
 w3lib==1.22.0
 zope.interface==5.4.0
+pytz==2022.1
+apscheduler==3.9.1

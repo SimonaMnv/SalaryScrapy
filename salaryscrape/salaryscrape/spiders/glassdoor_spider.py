@@ -1,7 +1,6 @@
 import json
 import datetime
 
-import boto3
 import scrapy
 from scrapy.spiders.init import InitSpider
 from ..items import CompanySalary
@@ -12,7 +11,7 @@ from .secrets_config import config
 
 
 class GlassDoor(InitSpider):
-    name = "glassdoor_salary"
+    name = "glassdoor_spider"
     login_url = 'https://www.glassdoor.com/profile/login_input.htm'
 
     def __init__(self, **kwargs):

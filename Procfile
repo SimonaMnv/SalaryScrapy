@@ -1,1 +1,2 @@
-web: salaryscrape
+web: scrapyd
+clock: python scheduler.py
