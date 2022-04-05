@@ -17,12 +17,13 @@ class Config(object):
             'id': 'crawl_job',
             'func': '__main__:crawl',
             'trigger': 'cron',
-            'day': '1',
+            'day': '*',
             'hour': '6',
             'minute': '0',
             'second': '0'
         },
     ]
+    SCHEDULER_API_ENABLED = True
 
 
 app = Flask(__name__)
@@ -37,18 +38,7 @@ def crawl():
     d.addBoth(lambda _: reactor.stop())
     reactor.run()
 
-    return 'Scraping...'
-
-
-@app.route('/')
-def index():
-    return jsonify({'ip': request.remote_addr}), 200
-
-
-@app.route('/schedule_crawl')
-def schedule_crawl():
-    scheduler.add_job(id='glassdoor_crawl_job', func=crawl, trigger='interval', minute='2')
-    return jsonify({str(datetime.datetime.now()): 'Crawling Scheduled'}), 200
+    return str(datetime.datetime.now()) + '_' + 'Scraping...'
 
 
 if __name__ == '__main__':
