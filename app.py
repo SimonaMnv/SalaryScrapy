@@ -45,7 +45,7 @@ def _crawler_result(item, response, spider):
 
 @app.route('/crawl')
 def add_tasks():
-    app.apscheduler.add_job(func=scrape_with_crochet, trigger='cron', minute='*/5', id='job-crawler')
+    app.apscheduler.add_job(func=scrape_with_crochet, trigger='cron', minute='*/2', id='job-crawler')
     return jsonify({str(datetime.datetime.now()): 'crawl job started'}), 200
 
 
