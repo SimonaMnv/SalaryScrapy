@@ -10,11 +10,23 @@ from scrapy.utils.log import configure_logging
 from scrapy.utils.project import get_project_settings
 from salaryscrape.salaryscrape.spiders.glassdoor_spider import GlassDoor
 
-app = Flask(__name__)
 
-scheduler = APScheduler()
-scheduler.init_app(app)
-scheduler.start()
+class Config(object):
+    JOBS = [
+        {
+            'id': 'crawl_job',
+            'func': '__main__:crawl',
+            'trigger': 'cron',
+            'day': '1',
+            'hour': '6',
+            'minute': '0',
+            'second': '0'
+        },
+    ]
+
+
+app = Flask(__name__)
+app.config.from_object(Config())
 
 
 def crawl():
@@ -35,9 +47,13 @@ def index():
 
 @app.route('/schedule_crawl')
 def schedule_crawl():
-    scheduler.add_job(id='glassdoor_crawl_job', func=crawl, trigger='interval', hour=2)
+    scheduler.add_job(id='glassdoor_crawl_job', func=crawl, trigger='interval', minute='2')
     return jsonify({str(datetime.datetime.now()): 'Crawling Scheduled'}), 200
 
 
 if __name__ == '__main__':
+    scheduler = APScheduler()
+    scheduler.init_app(app)
+    scheduler.start()
+
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT')))
