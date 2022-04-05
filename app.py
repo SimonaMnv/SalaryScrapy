@@ -1,4 +1,5 @@
 import os
+from flask_apscheduler import APScheduler
 
 from flask import Flask, request, jsonify
 from twisted.internet import reactor
@@ -16,8 +17,7 @@ def index():
     return jsonify({'ip': request.remote_addr}), 200
 
 
-@app.route('/crawl', methods=['GET', 'POST'])
-def get_data():
+def crawl():
     configure_logging({'LOG_FORMAT': '%(levelname)s: %(message)s'})
 
     runner = CrawlerRunner(get_project_settings())
@@ -29,4 +29,9 @@ def get_data():
 
 
 if __name__ == '__main__':
+    scheduler = APScheduler()
+    scheduler.init_app(app)
+    scheduler.start()
+
+    scheduler.add_job(id='glassdoor_crawl_job', func=crawl, trigger='interval', hour=2)
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT')))
