@@ -27,7 +27,11 @@ class Config(object):
 
 
 app = Flask(__name__)
-app.config.from_object(Config())
+# app.config.from_object(Config())
+
+scheduler = APScheduler()
+scheduler.init_app(app)
+scheduler.start()
 
 
 def crawl():
@@ -41,9 +45,11 @@ def crawl():
     return str(datetime.datetime.now()) + '_' + 'Scraping...'
 
 
-if __name__ == '__main__':
-    scheduler = APScheduler()
-    scheduler.init_app(app)
-    scheduler.start()
+@app.route('/crawl')
+def add_tasks():
+    app.apscheduler.add_job(func=crawl, trigger='cron', minute='*/5', id='job-crawler')
+    return jsonify({str(datetime.datetime.now()) + '_' + 'crawl job started'}), 200
 
+
+if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT')))
