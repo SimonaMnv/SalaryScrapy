@@ -11,21 +11,6 @@ from scrapy.utils.project import get_project_settings
 from salaryscrape.salaryscrape.spiders.glassdoor_spider import GlassDoor
 
 
-class Config(object):
-    JOBS = [
-        {
-            'id': 'crawl_job',
-            'func': '__main__:crawl',
-            'trigger': 'cron',
-            'day': '*',
-            'hour': '6',
-            'minute': '0',
-            'second': '0'
-        },
-    ]
-    SCHEDULER_API_ENABLED = True
-
-
 app = Flask(__name__)
 scheduler = APScheduler()
 scheduler.init_app(app)
