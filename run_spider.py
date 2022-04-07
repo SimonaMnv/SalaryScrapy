@@ -20,8 +20,8 @@ class GlassdoorScraper:
         print("process.crawl ended")
 
     def _crawler_result(self, item, response, spider):
-        print("_crawler_result starting")
         self.output_data.append(dict(item))
+        print("item collected", dict(item))
 
     def get_output_data(self):
         print("get_output_data starting")

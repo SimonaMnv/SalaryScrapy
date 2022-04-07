@@ -8,7 +8,7 @@
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 import requests
 
-BOT_NAME = 'salaryscrape'
+BOT_NAME = 'salaryscrape.salaryscrape'
 
 SPIDER_MODULES = ['salaryscrape.spiders']
 NEWSPIDER_MODULE = 'salaryscrape.spiders'
