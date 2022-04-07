@@ -44,7 +44,7 @@ def _crawler_result(item, response, spider):
 
 @app.route('/crawl')
 def add_tasks():
-    app.apscheduler.add_job(func=scrape_with_crochet, trigger='cron', minute='*/2')
+    app.apscheduler.add_job(func=scrape_with_crochet, trigger='cron', minute='*/2', id='glassdoor_spider_crawl_job')
     return jsonify({str(datetime.datetime.now()): 'crawl job started'}), 200
 
 
