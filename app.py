@@ -34,12 +34,13 @@ def scrape_with_crochet():
     """
     dispatcher.connect(_crawler_result, signal=signals.item_scraped)
     eventual = crawl_runner.crawl(glassdoor_spider.GlassDoor, base_url="https://www.glassdoor.com/Salaries/")
-    print(jsonify({str(datetime.datetime.now()): 'started scrape_with_crochet()'}))
+    print("Hi2")
     return eventual
 
 
 def _crawler_result(item, response, spider):
     output_data.append(dict(item))
+    print("Hi")
     print(f"{datetime.datetime.now()} Output data crawled:", output_data)
 
 
