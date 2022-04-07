@@ -8,7 +8,6 @@ import datetime
 
 from flask import Flask, jsonify
 from scrapy.crawler import CrawlerRunner
-from scrapy.utils.log import configure_logging
 from scrapy.signalmanager import dispatcher
 from scrapy import signals
 from scrapy.utils.project import get_project_settings
@@ -26,7 +25,7 @@ crawl_runner = CrawlerRunner(get_project_settings())
 output_data = []
 
 
-@crochet.wait_for(timeout=60.0)
+@crochet.run_in_reactor
 def scrape_with_crochet():
     """
     signal fires when single item is processed and calls _crawler_result to append that item
