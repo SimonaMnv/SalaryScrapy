@@ -30,7 +30,7 @@ def scrape_with_crochet():
 
 @app.route('/crawl')
 def add_tasks():
-    app.apscheduler.add_job(func=scrape_with_crochet, trigger='cron', minute='*/55', id='glassdoor_spider_crawl_job')
+    app.apscheduler.add_job(func=scrape_with_crochet, trigger='cron', minute='*/2', id='glassdoor_spider_crawl_job')
     return jsonify({str(datetime.datetime.now()): 'crawl job started'}), 200
 
 
