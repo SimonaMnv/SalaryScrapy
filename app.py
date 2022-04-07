@@ -1,5 +1,6 @@
 import os
 import subprocess
+from subprocess import call
 
 from flask_apscheduler import APScheduler
 import datetime
@@ -13,11 +14,8 @@ scheduler.start()
 
 
 def run_spider():
-    """ run the spider """
-    print("Current dir", subprocess.check_output(['ls'], shell=True))
-    subprocess.run(['cd', 'salaryscrape'], shell=True)
-    print("Current dir2", subprocess.check_output(['ls'], shell=True))
-    subprocess.run(['scrapy', 'crawl', 'glassdoor_spider'], shell=True)
+    """ run the spider inside the heroku container """
+    call(["scrapy", 'crawl', 'glassdoor_spider'], cwd='/app/salaryscrape')
 
 
 @app.route('/crawl')
