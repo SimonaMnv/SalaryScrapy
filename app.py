@@ -13,7 +13,7 @@ from scrapy.signalmanager import dispatcher
 from scrapy import signals
 from scrapy.utils.project import get_project_settings
 
-from salaryscrape.salaryscrape.spiders import glassdoor_spider
+from salaryscrape.salaryscrape.spiders.glassdoor_spider import GlassDoor
 
 app = Flask(__name__)
 
@@ -24,23 +24,23 @@ scheduler.start()
 crawl_runner = CrawlerRunner(get_project_settings())
 
 output_data = []
+BASE_URL = "https://www.glassdoor.com/Salaries/"
 
 
-@crochet.wait_for(timeout=60.0)
+@crochet.run_in_reactor
 def scrape_with_crochet():
     """
     signal fires when single item is processed and calls _crawler_result to append that item
     returns a twisted.internet.defer.Deferred
     """
     dispatcher.connect(_crawler_result, signal=signals.item_scraped)
-    eventual = crawl_runner.crawl(glassdoor_spider.GlassDoor, base_url="https://www.glassdoor.com/Salaries/")
-    print("Hi2")
+    eventual = crawl_runner.crawl(GlassDoor, category=BASE_URL)
+    print("return eventual")
     return eventual
 
 
 def _crawler_result(item, response, spider):
     output_data.append(dict(item))
-    print("Hi")
     print(f"{datetime.datetime.now()} Output data crawled:", output_data)
 
 
