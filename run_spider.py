@@ -15,7 +15,9 @@ class GlassdoorScraper:
     def run_spider(self):
         print("run_spider starting")
         dispatcher.connect(self._crawler_result, signal=signals.item_scraped)
+        print("dispatcher.connect ended")
         self.process.crawl(self.spider)
+        print("process.crawl ended")
 
     def _crawler_result(self, item, response, spider):
         print("_crawler_result starting")
