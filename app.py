@@ -27,7 +27,7 @@ output_data = []
 
 
 def scrape():
-    return jsonify({str(datetime.datetime.now()): 'Hi'}), 200
+    return print("Hi")
 
 
 @app.route('/crawl')
