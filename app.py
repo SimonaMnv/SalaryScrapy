@@ -26,7 +26,7 @@ crawl_runner = CrawlerRunner(get_project_settings())
 output_data = []
 
 
-@crochet.run_in_reactor
+@crochet.wait_for(timeout=60.0)
 def scrape_with_crochet():
     """
     signal fires when single item is processed and calls _crawler_result to append that item
