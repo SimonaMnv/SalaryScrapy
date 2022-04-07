@@ -14,11 +14,11 @@ class GlassdoorScraper:
 
     def run_spider(self):
         dispatcher.connect(self._crawler_result, signal=signals.item_scraped)
-        print("process.crawl starting")
         self.process.crawl(self.spider)
 
     def _crawler_result(self, item, response, spider):
         self.output_data.append(dict(item))
+        print(f"items: {dict(item)}")
 
     def get_output_data(self):
         self.output_data = [dict(t) for t in {tuple(d.items()) for d in self.output_data}]
