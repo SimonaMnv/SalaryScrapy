@@ -1,10 +1,7 @@
 import crochet
-import os
 from flask_apscheduler import APScheduler
 import datetime
 from flask import Flask, jsonify
-from scrapy.crawler import CrawlerRunner
-from scrapy.utils.project import get_project_settings
 
 from salaryscrape.salaryscrape.spiders.glassdoor_spider import GlassDoor
 from run_spider import GlassdoorScraper
@@ -18,14 +15,11 @@ scheduler.start()
 
 
 def scrape_with_crochet():
-    print("scrape_with_crochet starting")
     scraper = GlassdoorScraper(GlassDoor)
     scraper.run_spider()
 
     while not scraper.is_closed:
         continue
-
-    return scraper.get_output_data()
 
 
 @app.route('/crawl')
