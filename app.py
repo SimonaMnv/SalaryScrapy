@@ -26,7 +26,6 @@ crawl_runner = CrawlerRunner(get_project_settings())
 output_data = []
 
 
-@app.route("/scrape")
 @crochet.wait_for(timeout=60.0)
 def scrape_with_crochet():
     """
@@ -34,7 +33,7 @@ def scrape_with_crochet():
     returns a twisted.internet.defer.Deferred
     """
     dispatcher.connect(_crawler_result, signal=signals.item_scraped)
-    eventual = crawl_runner.crawl(glassdoor_spider.GlassDoor)
+    eventual = crawl_runner.crawl(glassdoor_spider.GlassDoor, base_url="https://www.glassdoor.com/Salaries/")
     print(jsonify({str(datetime.datetime.now()): 'started scrape_with_crochet()'}))
     return eventual
 
@@ -45,7 +44,7 @@ def _crawler_result(item, response, spider):
 
 @app.route('/crawl')
 def add_tasks():
-    app.apscheduler.add_job(func=scrape_with_crochet, trigger='cron', minute='*/2', id='job-crawler')
+    app.apscheduler.add_job(func=scrape_with_crochet, trigger='cron', minute='*/2')
     return jsonify({str(datetime.datetime.now()): 'crawl job started'}), 200
 
 
