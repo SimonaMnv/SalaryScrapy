@@ -14,9 +14,9 @@ scheduler.start()
 
 def run_spider():
     """ run the spider """
+    print("Current dir", subprocess.check_output(['ls'], shell=True))
     subprocess.run(['cd', 'salaryscrape'], shell=True)
-    subprocess.run(['cd', 'salaryscrape'], shell=True)
-    subprocess.check_output(['ls', '-l'], shell=True)
+    print("Current dir2", subprocess.check_output(['ls'], shell=True))
     subprocess.run(['scrapy', 'crawl', 'glassdoor_spider'], shell=True)
 
 
