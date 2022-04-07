@@ -1,6 +1,6 @@
 import boto3
 
-from salaryscrape.spiders.secrets_config import config
+from salaryscrape.spiders.secrets_config import config  # todo might have to change this for heroku
 
 
 class SalaryscrapePipeline:
