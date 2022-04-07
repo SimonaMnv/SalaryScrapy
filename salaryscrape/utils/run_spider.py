@@ -13,19 +13,13 @@ class GlassdoorScraper:
         self.spider = spider
 
     def run_spider(self):
-        print("settings", get_project_settings())
-        print("run_spider starting")
         dispatcher.connect(self._crawler_result, signal=signals.item_scraped)
-        print("dispatcher.connect ended")
+        print("process.crawl starting")
         self.process.crawl(self.spider)
-        print("process.crawl ended")
 
     def _crawler_result(self, item, response, spider):
-        print("_crawler_result started")
         self.output_data.append(dict(item))
-        print("item collected", dict(item))
 
     def get_output_data(self):
-        print("get_output_data starting")
         self.output_data = [dict(t) for t in {tuple(d.items()) for d in self.output_data}]
         return jsonify(self.output_data)

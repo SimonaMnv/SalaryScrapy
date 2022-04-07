@@ -1,10 +1,12 @@
+import os
+
 import crochet
 from flask_apscheduler import APScheduler
 import datetime
 from flask import Flask, jsonify
 
 from salaryscrape.salaryscrape.spiders.glassdoor_spider import GlassDoor
-from run_spider import GlassdoorScraper
+from salaryscrape.utils.run_spider import GlassdoorScraper
 
 crochet.setup()
 app = Flask(__name__)
@@ -29,4 +31,4 @@ def add_tasks():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=1234)
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT')))
