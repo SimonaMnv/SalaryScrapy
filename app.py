@@ -1,19 +1,15 @@
 import crochet
-
-crochet.setup()
-
 import os
 from flask_apscheduler import APScheduler
 import datetime
-
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from scrapy.crawler import CrawlerRunner
-from scrapy.signalmanager import dispatcher
-from scrapy import signals
 from scrapy.utils.project import get_project_settings
 
 from salaryscrape.salaryscrape.spiders.glassdoor_spider import GlassDoor
+from run_spider import GlassdoorScraper
 
+crochet.setup()
 app = Flask(__name__)
 
 scheduler = APScheduler()
@@ -21,25 +17,19 @@ scheduler.init_app(app)
 scheduler.start()
 
 crawl_runner = CrawlerRunner(get_project_settings())
-
 output_data = []
 
 
-@crochet.run_in_reactor
+# @app.route('/get_items')
 def scrape_with_crochet():
-    """
-    signal fires when single item is processed and calls _crawler_result to append that item
-    returns a twisted.internet.defer.Deferred
-    """
-    dispatcher.connect(_crawler_result, signal=signals.item_scraped)
-    eventual = crawl_runner.crawl(GlassDoor, category="https://www.glassdoor.com/Salaries/")
-    print("return eventual")
-    return eventual
+    print("scrape_with_crochet starting")
+    scraper = GlassdoorScraper(GlassDoor)
+    scraper.run_spider()
 
+    while not scraper.is_closed:
+        continue
 
-def _crawler_result(item, response, spider):
-    output_data.append(dict(item))
-    print(f"{datetime.datetime.now()} Output data crawled:", output_data)
+    return scraper.get_output_data()
 
 
 @app.route('/crawl')
