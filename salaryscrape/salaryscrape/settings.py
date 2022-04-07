@@ -20,6 +20,8 @@ SPIDER_LOADER_CLASS = "scrapy.spiderloader.SpiderLoader"
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
 
+LOG_ENABLED = True
+LOG_LEVEL = "INFO"
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 CONCURRENT_REQUESTS = 64
 

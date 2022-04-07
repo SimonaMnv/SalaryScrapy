@@ -2,7 +2,7 @@ import crochet
 import os
 from flask_apscheduler import APScheduler
 import datetime
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify
 from scrapy.crawler import CrawlerRunner
 from scrapy.utils.project import get_project_settings
 
@@ -16,11 +16,7 @@ scheduler = APScheduler()
 scheduler.init_app(app)
 scheduler.start()
 
-crawl_runner = CrawlerRunner(get_project_settings())
-output_data = []
 
-
-# @app.route('/get_items')
 def scrape_with_crochet():
     print("scrape_with_crochet starting")
     scraper = GlassdoorScraper(GlassDoor)
@@ -34,7 +30,7 @@ def scrape_with_crochet():
 
 @app.route('/crawl')
 def add_tasks():
-    app.apscheduler.add_job(func=scrape_with_crochet, trigger='cron', minute='*/2', id='glassdoor_spider_crawl_job')
+    app.apscheduler.add_job(func=scrape_with_crochet, trigger='cron', minute='*/55', id='glassdoor_spider_crawl_job')
     return jsonify({str(datetime.datetime.now()): 'crawl job started'}), 200
 
 
