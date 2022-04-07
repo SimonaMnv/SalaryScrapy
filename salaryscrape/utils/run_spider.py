@@ -4,6 +4,15 @@ from scrapy.crawler import CrawlerRunner
 from scrapy.signalmanager import dispatcher
 from scrapy.utils.project import get_project_settings
 
+"""
+to run:
+    scraper = GlassdoorScraper(GlassDoor)
+    scraper.run_spider()
+    
+    while not scraper.is_closed:
+    continue
+"""
+
 
 class GlassdoorScraper:
     def __init__(self, spider):
