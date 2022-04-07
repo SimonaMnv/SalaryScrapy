@@ -1,6 +1,6 @@
 import boto3
 
-from spiders.secrets_config import config
+from salaryscrape.spiders.secrets_config import config
 
 
 class SalaryscrapePipeline:
@@ -15,10 +15,11 @@ class SalaryscrapePipeline:
 
     def process_item(self, item, spider):
         """ write the data to the remote_db_table_name in dynamodb """
+        print("writing item to dynamodb")
         table = self.session.Table(self.tablename)
 
         table.put_item(
-            Item={k: v for k, v in item.items()}
+            Item={str(k): str(v) for k, v in item.items()}
         )
 
         return item

@@ -25,14 +25,17 @@ This project uses a connection to AWS DynamoDB to store the data in.
    3. The above steps will also give you the Access key ID & Secret key access that is needed in order to host this in Heroku
    add those in environment variables in Heroku and also add in your glassdoor username & password to authenticate the session
    4. The pipeline that stores the data in herokuDB along with the connection initialization is in `pipelines.py`
+   5. Create the table with the correct name in DynamoDB, set partition key to "timestamp"
 
-# Scrapy & Heroku & Flask
-   1. Scraping in Heroku is not allowed so proxies should be used instead (`salaryscrape/settings.py`) and that makes the process slower
+# Scrapy & Heroku & Flask 
+   1. The ```glassdoor_spider``` scrapes the data by creating the URLs based on the information in the static_files
+   2. Scraping in Heroku is not allowed so proxies should be used instead (`salaryscrape/settings.py`) and that makes the process slower
    to make this faster, hit an API with valid proxies instead of a static list
-   
+   3. The ```pipelines.py``` store each parsed item into the dynamodb table
 
 # Scheduler
-The crawling is scheduled once every 2 weeks to get up-to-date date plus gather historical data
+   1. When we post a request at ```/crawl```, the spider is triggered and then the scheduler takes over to keep triggering it 
+   2. The crawling is scheduled once every 2 weeks to get up-to-date date plus gather historical data
 
 # TODO: 
 1. Add in Streamlit UI (?)
