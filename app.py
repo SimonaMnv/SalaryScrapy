@@ -3,7 +3,7 @@ import os
 from flask_apscheduler import APScheduler
 import datetime
 from flask import Flask, jsonify
-from scrapy import cmdline
+from salaryscrape.salaryscrape.spiders import secrets_config
 
 app = Flask(__name__)
 
@@ -13,7 +13,8 @@ scheduler.start()
 
 
 def run_spider():
-    cmdline.execute("scrapy crawl glassdoor_spider")
+    os.system(f"cd {secrets_config.config['spider_root_dir']}")
+    os.system(f"scrapy crawl {secrets_config.config['spider_name']}")
 
 
 @app.route('/crawl')
