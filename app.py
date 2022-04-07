@@ -24,7 +24,6 @@ scheduler.start()
 crawl_runner = CrawlerRunner(get_project_settings())
 
 output_data = []
-BASE_URL = "https://www.glassdoor.com/Salaries/"
 
 
 @crochet.run_in_reactor
@@ -34,7 +33,7 @@ def scrape_with_crochet():
     returns a twisted.internet.defer.Deferred
     """
     dispatcher.connect(_crawler_result, signal=signals.item_scraped)
-    eventual = crawl_runner.crawl(GlassDoor, category=BASE_URL)
+    eventual = crawl_runner.crawl(GlassDoor, category="https://www.glassdoor.com/Salaries/")
     print("return eventual")
     return eventual
 
