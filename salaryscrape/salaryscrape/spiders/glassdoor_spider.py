@@ -77,6 +77,8 @@ class GlassDoor(InitSpider):
         salary['job_percentile90_payment'] = main_page["estimatedSalary"][0]["percentile90"]
         salary['location_currency'] = main_page["estimatedSalary"][0]["currency"]
         salary['sample_size'] = main_page["sampleSize"]
+        salary['pay_period'] = re.search('(?<=\/<!-- -->)(.*?)(?=\<)', str(response.xpath('//span[contains(@class, "css-18stkbk")]')[2].extract()))[0]
 
         print(f'Item crawled: {salary}')
+
         yield salary

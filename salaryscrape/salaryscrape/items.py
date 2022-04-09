@@ -15,4 +15,5 @@ class CompanySalary(scrapy.Item):
     job_percentile90_payment = scrapy.Field()
     location_currency = scrapy.Field()
     sample_size = scrapy.Field()
+    pay_period = scrapy.Field()
     # highest_paying_companies = scrapy.Field() # todo: add this

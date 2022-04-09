@@ -20,8 +20,8 @@ def run_spider():
 @app.route('/crawl')
 def add_tasks():
     """ create a scheduler to execute the spider weekly - one unique id running at a time """
-    # TODO: change this to week=2
-    app.apscheduler.add_job(func=run_spider, trigger='cron', minute='*/5', id='glassdoor_spider_crawl_job')
+    # TODO: change this to week=2, now it calls it every day at 11
+    app.apscheduler.add_job(func=run_spider, trigger='cron', hour='23', minute='00', id='glassdoor_spider_crawl_job')
     return jsonify({str(datetime.datetime.now()): 'crawl job started'}), 200
 
 
