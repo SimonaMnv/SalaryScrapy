@@ -38,7 +38,7 @@ This project uses a connection to AWS DynamoDB to store the data in.
    - The crawling is scheduled once every 2 weeks to get up-to-date date plus gather historical data
 
 # How to run
- - To run locally simply change ```SPIDER_MODULES``` & ```NEWSPIDER_MODULE``` in ```settings.py``` to ```salaryscrape.spiders```
+ - To run locally simply change ```SPIDER_MODULES``` & ```NEWSPIDER_MODULE``` & ```ITEM_PIPELINES``` in ```settings.py``` to ```salaryscrape.spiders```
  and the same for ```default``` in ```scrapy.cfg```. Then run ```scrapy crawl glassdoor_spider``` while in the scrapy dir
  - To run in heroku, simply deploy it and run once the `````/crawl````` endpoint. Make sure to have all env variables as described above
  - More jobs/countries can be added in 
