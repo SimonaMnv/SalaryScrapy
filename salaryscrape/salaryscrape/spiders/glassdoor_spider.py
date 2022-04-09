@@ -8,7 +8,7 @@ from ..items import CompanySalary
 import logging
 import re
 
-from salaryscrape.utils.secrets_config import config
+from salaryscrape.salaryscrape.utils.secrets_config import config
 
 JOBS = ["data-engineer-", "data-scientist-", "software-engineer-"]
 
