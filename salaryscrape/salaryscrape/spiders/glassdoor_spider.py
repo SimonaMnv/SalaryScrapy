@@ -8,7 +8,9 @@ from ..items import CompanySalary
 import logging
 import re
 
-from .secrets_config import config
+from salaryscrape.utils.secrets_config import config
+
+JOBS = ["data-engineer-", "data-scientist-", "software-engineer-"]
 
 
 class GlassDoor(InitSpider):
@@ -50,12 +52,12 @@ class GlassDoor(InitSpider):
 
     def start_requests(self):
         """ generate the links """
-        eu_countries = json.load(open(config['root_dir'] + '/static_files/eu_countries.json'))
-        jobs = json.load(open(config['root_dir'] + '/static_files/jobs.json'))
+        country_codes = json.load(open(config['root_dir'] + '/salaryscrape/utils/country_codes.json'))
 
-        for country_k, country_v in eu_countries.items():
-            for job_k, job_v in jobs.items():
-                final_url = self.base_url + country_k + job_v + country_v + str(len(job_v) + len(country_k)) + ".htm"
+        for country_k, country_v in country_codes.items():
+            for job in JOBS:
+                final_url = self.base_url + country_k + job + "salary-SRCH_IL.0,4_IM" + str(country_v) + "_KO" + str(
+                    len(country_k)) + "," + str(len(country_k) + len(job)) + ".htm"
                 yield scrapy.Request(url=final_url, callback=self.salary_parse)
 
     @staticmethod

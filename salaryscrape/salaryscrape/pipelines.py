@@ -1,6 +1,6 @@
 import boto3
 
-from salaryscrape.spiders.secrets_config import config
+from salaryscrape.utils.secrets_config import config
 
 
 class SalaryscrapePipeline:
