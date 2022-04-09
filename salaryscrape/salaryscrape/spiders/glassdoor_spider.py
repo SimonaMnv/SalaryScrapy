@@ -6,15 +6,19 @@ from scrapy.spiders.init import InitSpider
 from ..items import CompanySalary
 
 import logging
+import re
 
-from .secrets_config import config
+from salaryscrape.salaryscrape.utils.secrets_config import config
+
+JOBS = ["data-engineer-", "data-scientist-", "software-engineer-"]
 
 
 class GlassDoor(InitSpider):
-    name = "glassdoor_salary"
+    name = "glassdoor_spider"
     login_url = 'https://www.glassdoor.com/profile/login_input.htm'
 
-    def __init__(self):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.glassdoor_user = config['glassdoor_username']
         self.glassdoor_pw = config['glassdoor_password']
         self.base_url = "https://www.glassdoor.com/Salaries/"
@@ -48,12 +52,12 @@ class GlassDoor(InitSpider):
 
     def start_requests(self):
         """ generate the links """
-        eu_countries = json.load(open(config['root_dir'] + '/static_files/eu_countries.json'))
-        jobs = json.load(open(config['root_dir'] + '/static_files/jobs.json'))
+        country_codes = json.load(open(config['root_dir'] + '/salaryscrape/utils/country_codes.json'))
 
-        for country_k, country_v in eu_countries.items():
-            for job_k, job_v in jobs.items():
-                final_url = self.base_url + country_k + job_v + country_v + str(len(job_v) + len(country_k)) + ".htm"
+        for country_k, country_v in country_codes.items():
+            for job in JOBS:
+                final_url = self.base_url + country_k + job + "salary-SRCH_IL.0,4_IM" + str(country_v) + "_KO" + str(
+                    len(country_k)) + "," + str(len(country_k) + len(job)) + ".htm"
                 yield scrapy.Request(url=final_url, callback=self.salary_parse)
 
     @staticmethod
@@ -63,8 +67,10 @@ class GlassDoor(InitSpider):
 
         main_page = json.loads(response.xpath('//script[@type="application/ld+json"]//text()').extract_first())
 
+        print(f'crawling URL: {response.url}')
+
         salary['timestamp'] = str(datetime.datetime.now())
-        salary['location'] = main_page["occupationLocation"][0]["name"]
+        salary['location'] = re.search('(?:.*?\/){4}([^\/-]+)', str(response.url))[1]
         salary['job_title'] = main_page["name"]
         salary['job_percentile10_payment'] = main_page["estimatedSalary"][0]["percentile10"]
         salary['job_median_payment'] = main_page["estimatedSalary"][0]["median"]
@@ -72,4 +78,5 @@ class GlassDoor(InitSpider):
         salary['location_currency'] = main_page["estimatedSalary"][0]["currency"]
         salary['sample_size'] = main_page["sampleSize"]
 
+        print(f'Item crawled: {salary}')
         yield salary
