@@ -12,6 +12,11 @@ scheduler.init_app(app)
 scheduler.start()
 
 
+@app.route('/', methods=['GET'])
+def home():
+    return jsonify({str(datetime.datetime.now()): ' '}), 200
+
+
 def run_spider():
     """ run the spider inside the heroku container """
     call(["scrapy", 'crawl', 'glassdoor_spider'], cwd='/app/salaryscrape')
