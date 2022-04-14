@@ -17,12 +17,13 @@ def home():
     return jsonify({str(datetime.datetime.now()): ' '}), 200
 
 
+@app.route('/crawl')
 def run_spider():
     """ run the spider inside the heroku container """
     call(["scrapy", 'crawl', 'glassdoor_spider'], cwd='/app/salaryscrape')
 
 
-@app.route('/crawl')
+@app.route('/scheduled_crawl')
 def add_tasks():
     """ create a scheduler to execute the spider weekly - one unique id running at a time """
     app.apscheduler.add_job(func=run_spider, trigger='cron', day_of_week='wed', hour='20', minute='01',

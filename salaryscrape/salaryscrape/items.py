@@ -9,6 +9,7 @@ import scrapy
 class CompanySalary(scrapy.Item):
     timestamp = scrapy.Field()
     location = scrapy.Field()
+    country = scrapy.Field()
     job_title = scrapy.Field()
     job_percentile10_payment = scrapy.Field()
     job_median_payment = scrapy.Field()

@@ -22,6 +22,7 @@ class GlassDoor(InitSpider):
         self.glassdoor_user = config['glassdoor_username']
         self.glassdoor_pw = config['glassdoor_password']
         self.base_url = "https://www.glassdoor.com/Salaries/"
+        self.country_codes = json.load(open(config['root_dir'] + '/salaryscrape/utils/country_codes.json'))
 
     def init_request(self):
         return scrapy.Request(
@@ -52,13 +53,11 @@ class GlassDoor(InitSpider):
 
     def start_requests(self):
         """ generate the links """
-        country_codes = json.load(open(config['root_dir'] + '/salaryscrape/utils/country_codes.json'))
-
-        for country_k, country_v in country_codes.items():
+        for country_k, country_v in self.country_codes.items():
             for job in JOBS:
-                final_url = self.base_url + country_k + job + "salary-SRCH_IL.0,4_IM" + str(country_v) + "_KO" + str(
-                    len(country_k)) + "," + str(len(country_k) + len(job)) + ".htm"
-                yield scrapy.Request(url=final_url, callback=self.salary_parse)
+                final_url = self.base_url + str(country_k).split("_")[1] + job + "salary-SRCH_IL.0,4_IM" + str(country_v) + "_KO" + str(
+                    len(str(country_k).split("_")[1])) + "," + str(len(str(country_k).split("_")[1]) + len(job)) + ".htm"
+                yield scrapy.Request(url=final_url, callback=self.salary_parse, cb_kwargs={"country":  str(country_k).split("_")[0]})
 
     @staticmethod
     def salary_parse(response):
@@ -71,6 +70,7 @@ class GlassDoor(InitSpider):
 
         salary['timestamp'] = str(datetime.datetime.now())
         salary['location'] = re.search('(?:.*?\/){4}([^\/-]+)', str(response.url))[1]
+        salary['country'] = response.cb_kwargs['country']
         salary['job_title'] = main_page["name"]
         salary['job_percentile10_payment'] = main_page["estimatedSalary"][0]["percentile10"]
         salary['job_median_payment'] = main_page["estimatedSalary"][0]["median"]
