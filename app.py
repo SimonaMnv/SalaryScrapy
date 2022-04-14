@@ -21,6 +21,7 @@ def home():
 def run_spider():
     """ run the spider inside the heroku container """
     call(["scrapy", 'crawl', 'glassdoor_spider'], cwd='/app/salaryscrape')
+    return jsonify({str(datetime.datetime.now()): 'crawl job started'}), 200
 
 
 @app.route('/scheduled_crawl')
