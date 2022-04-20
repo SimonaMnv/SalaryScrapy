@@ -57,7 +57,7 @@ class GlassDoor(InitSpider):
             for job in JOBS:
                 final_url = self.base_url + str(country_k).split("_")[1] + job + "salary-SRCH_IL.0,4_IM" + str(country_v) + "_KO" + str(
                     len(str(country_k).split("_")[1])) + "," + str(len(str(country_k).split("_")[1]) + len(job)) + ".htm"
-                yield scrapy.Request(url=final_url, callback=self.salary_parse, cb_kwargs={"country":  str(country_k).split("_")[0]})
+                yield scrapy.Request(url=final_url, callback=self.salary_parse, cb_kwargs={'country':  str(country_k).split("_")[0]})
 
     @staticmethod
     def salary_parse(response):

@@ -22,12 +22,19 @@ def run_spider():
     call(["scrapy", 'crawl', 'glassdoor_spider'], cwd='/app/salaryscrape')
 
 
-@app.route('/crawl')
+@app.route('/scheduled_crawl')
 def add_tasks():
     """ create a scheduler to execute the spider weekly - one unique id running at a time """
-    # 20 -> 23, 17 ->
     app.apscheduler.add_job(func=run_spider, trigger='cron', day_of_week='thu', hour='17', minute='01',
                             id='glassdoor_spider_crawl_job')
+    return jsonify({str(datetime.datetime.now()): 'crawl job started'}), 200
+
+
+@app.route('/crawl')
+# TODO: remove this after testing
+def run_spider():
+    """ run the spider inside the heroku container """
+    call(["scrapy", 'crawl', 'glassdoor_spider'], cwd='/app/salaryscrape')
     return jsonify({str(datetime.datetime.now()): 'crawl job started'}), 200
 
 
