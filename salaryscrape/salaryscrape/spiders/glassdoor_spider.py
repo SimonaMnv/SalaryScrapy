@@ -1,6 +1,8 @@
 import json
 import datetime
+import os
 
+import requests
 import scrapy
 from scrapy.spiders.init import InitSpider
 from ..items import CompanySalary
@@ -11,6 +13,12 @@ import re
 from salaryscrape.salaryscrape.utils.secrets_config import config
 
 JOBS = ["data-engineer-", "data-scientist-", "software-engineer-"]
+
+if config['ENV'] == 'prod':
+    api_key = config['positionstack_api_key']
+else:
+    creds = json.load(open(os.path.join(os.pardir, 'creds.json')))
+    api_key = creds["positionstack_api_key"]
 
 
 class GlassDoor(InitSpider):
@@ -23,6 +31,7 @@ class GlassDoor(InitSpider):
         self.glassdoor_pw = config['glassdoor_password']
         self.base_url = "https://www.glassdoor.com/Salaries/"
         self.country_codes = json.load(open(config['root_dir'] + '/salaryscrape/utils/country_codes.json'))
+        self.cords_api = f"http://api.positionstack.com/v1/forward?access_key={api_key}&query="
 
     def init_request(self):
         return scrapy.Request(
@@ -55,29 +64,37 @@ class GlassDoor(InitSpider):
         """ generate the links """
         for country_k, country_v in self.country_codes.items():
             for job in JOBS:
-                final_url = self.base_url + str(country_k).split("_")[1] + job + "salary-SRCH_IL.0,4_IM" + str(country_v) + "_KO" + str(
-                    len(str(country_k).split("_")[1])) + "," + str(len(str(country_k).split("_")[1]) + len(job)) + ".htm"
-                yield scrapy.Request(url=final_url, callback=self.salary_parse, cb_kwargs={'country':  str(country_k).split("_")[0]})
+                final_url = self.base_url + str(country_k).split("_")[1] + job + "salary-SRCH_IL.0,4_IM" + str(
+                    country_v) + "_KO" + str(
+                    len(str(country_k).split("_")[1])) + "," + str(
+                    len(str(country_k).split("_")[1]) + len(job)) + ".htm"
+                yield scrapy.Request(url=final_url, callback=self.salary_parse,
+                                     meta={'country': str(country_k).split("_")[0]})
 
-    @staticmethod
-    def salary_parse(response):
+    def salary_parse(self, response):
         """ clean & parse the data to fetch only what's required """
         salary = CompanySalary()
 
         main_page = json.loads(response.xpath('//script[@type="application/ld+json"]//text()').extract_first())
 
+        r = requests.get(self.cords_api + response.meta['country'])
+        lat_lon = r.json()
+
         print(f'crawling URL: {response.url}')
 
         salary['timestamp'] = str(datetime.datetime.now())
         salary['location'] = re.search('(?:.*?\/){4}([^\/-]+)', str(response.url))[1]
-        salary['country'] = response.cb_kwargs['country']
+        salary['country'] = response.meta['country']
+        salary['country_lat'] = lat_lon['data'][0]['latitude']
+        salary['country_lon'] = lat_lon['data'][0]['longitude']
         salary['job_title'] = main_page["name"]
         salary['job_percentile10_payment'] = main_page["estimatedSalary"][0]["percentile10"]
         salary['job_median_payment'] = main_page["estimatedSalary"][0]["median"]
         salary['job_percentile90_payment'] = main_page["estimatedSalary"][0]["percentile90"]
         salary['location_currency'] = main_page["estimatedSalary"][0]["currency"]
         salary['sample_size'] = main_page["sampleSize"]
-        salary['pay_period'] = re.search('(?<=\/<!-- -->)(.*?)(?=\<)', str(response.xpath('//span[contains(@class, "css-18stkbk")]')[2].extract()))[0]
+        salary['pay_period'] = re.search('(?<=\/<!-- -->)(.*?)(?=\<)',
+                                         str(response.xpath('//span[contains(@class, "css-18stkbk")]')[2].extract()))[0]
 
         print(f'Item crawled: {salary}')
 
