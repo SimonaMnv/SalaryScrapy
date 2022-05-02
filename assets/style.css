@@ -1,0 +1,112 @@
+#company .VirtualizedSelectFocusedOption {
+    background-color: #8c97a9;
+    color: #ffffff;
+}
+
+.Select-control {
+    background-color: #8c97a9 !important;
+}
+
+.VirtualizedSelectOption {
+    background-color: #8c97a9;
+    color: #8c97a9;
+}
+
+.VirtualizedSelectFocusedOption {
+    background-color: #8c97a9;
+    font-size: 18px;
+    color: #8c97a9;
+}
+
+#users_companies_table {
+    color: #ffffff;
+}
+
+.label {
+    color: #fff;
+}
+
+div.hZkeSi {
+    font-size: 18px;
+}
+
+#app-container {
+    height: auto;
+}
+
+.daq-leddisplay--light {
+    text-align: center;
+}
+
+html {
+    --scrollbarBG: #CFD8DC;
+    --thumbBG: #90A4AE;
+}
+
+
+header {
+    font-family: 'Lobster', cursive;
+    text-align: center;
+    font-size: 25px;
+}
+
+#info {
+    font-size: 18px;
+    color: #555;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+a {
+    color: #074E8C;
+}
+
+.force-overflow {
+    min-height: 450px;
+}
+
+#wrapper {
+    text-align: center;
+    width: 500px;
+    margin: auto;
+}
+
+#date-filter {
+    text-align: center;
+}
+
+#profession-filter-dd {
+    width: 17%;
+    text-align: center;
+    margin: 0 auto;
+}
+
+#btn-submit {
+    width: 100%;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.DateRangePickerInput__withBorder{
+    border: 3px solid #314b56;
+}
+
+.DateInput_input.DateInput_input_1.DateInput_input__focused.DateInput_input__focused_2{
+    color:#314b56;
+}
+.DateRangePickerInput.DateRangePickerInput_1.DateRangePickerInput__withBorder.DateRangePickerInput__withBorder_2{
+    color:#314b56;
+}
+
+.DateRangePickerInput_arrow_svg{
+    fill:#314b56;
+}
+
+#btn-submit:hover {
+    color: #FFFFFF;
+
+}
+
+#btn-submit {
+    color: #CACACA;
+}

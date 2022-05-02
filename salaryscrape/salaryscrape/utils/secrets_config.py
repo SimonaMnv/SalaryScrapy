@@ -1,7 +1,7 @@
 import os
 
 config = {
-    "ENV": "prod",
+    "ENV": "dev",
     "glassdoor_username": os.environ.get("GLASSDOOR_USERNAME"),
     "glassdoor_password": os.environ.get("GLASSDOOR_PASSWORD"),
     "dynamoDB_access_key": os.environ.get("DYNAMO_DB_ACCESS_KEY"),

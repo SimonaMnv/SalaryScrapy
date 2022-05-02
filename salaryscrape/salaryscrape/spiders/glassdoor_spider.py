@@ -85,8 +85,8 @@ class GlassDoor(InitSpider):
         salary['timestamp'] = str(datetime.datetime.now())
         salary['location'] = re.search('(?:.*?\/){4}([^\/-]+)', str(response.url))[1]
         salary['country'] = response.meta['country']
-        salary['country_lat'] = lat_lon['data'][0]['latitude']
-        salary['country_lon'] = lat_lon['data'][0]['longitude']
+        salary['lat'] = lat_lon['data'][0]['latitude']
+        salary['lon'] = lat_lon['data'][0]['longitude']
         salary['job_title'] = main_page["name"]
         salary['job_percentile10_payment'] = main_page["estimatedSalary"][0]["percentile10"]
         salary['job_median_payment'] = main_page["estimatedSalary"][0]["median"]
