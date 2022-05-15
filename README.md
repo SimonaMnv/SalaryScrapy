@@ -38,6 +38,7 @@ This project uses a connection to AWS DynamoDB to store the data in.
    - The crawling is scheduled once every 2 weeks to get up-to-date date plus gather historical data
 
 # Core Scrape Architecture
+<img width="878" alt="Screenshot 2022-05-15 at 20 34 54" src="https://user-images.githubusercontent.com/59322298/168486439-fb27cec7-1e81-4034-9573-c6ee634aa770.png">
 
 
 # Visualization
