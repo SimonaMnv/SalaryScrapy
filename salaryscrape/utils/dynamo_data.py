@@ -30,13 +30,21 @@ class DynamoData:
         )
         self.tablename = config["remote_db_table_name"]
 
-    def get_dynamodb_data(self, key=None, key_value=None):
-        """ Read data from DynamoDB """
+    def get_dynamodb_data(self, job_title_key=None, date_key=None, job_title_key_val=None,
+                          end_date=None, start_date=None):
+        """
+        Reads data from DynamoDB. First checks if a job and a date range are given to filter out data based on both,
+        then checks if nothing is given
+        """
         table = self.session.Table(self.tablename)
 
         try:
-            if key and key_value:
-                dynamodb_data = table.scan(FilterExpression=Attr(key).eq(key_value))
+            if job_title_key and job_title_key_val and date_key and end_date and start_date:
+                dynamodb_data = table.scan(
+                    FilterExpression=
+                    Attr(job_title_key).eq(job_title_key_val) &
+                    Attr(date_key).between(start_date, end_date)
+                )
             else:
                 dynamodb_data = table.scan()
         except ClientError:

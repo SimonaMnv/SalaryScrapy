@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 
 import pandas as pd
 from dash import dcc, no_update
@@ -20,7 +20,7 @@ app = dash.Dash(
 
 # get data from Amazon DynamoDB
 data = DynamoData()
-
+START_DATE = date(2022, 4, 20)  # The date the data started being collected. Used on the date-picker too
 
 # todo: add to the top right: 1) update rate 2) last updated
 # todo: fix to show something when applying without a job selected
@@ -80,29 +80,34 @@ def get_unique_jobs():
     return set(salary_data["job_title"])
 
 
-def salary_chart_bar(selected_job_title=None):
+def salary_chart_bar(end_date, start_date, selected_job_title=None):
     """
     Normalize the values to be per week if they are not.
-    Plot the bar-chart based on the selected profession from the dd.
+    Plot the bar-chart based on the selected profession from the dd. Also remote the seconds info from the timesttamp
     """
     if selected_job_title:
-        selected_job_data = data.get_dynamodb_data("job_title", selected_job_title)
+        selected_job_data = data.get_dynamodb_data("job_title", "timestamp", selected_job_title, end_date, start_date)
 
         selected_job_data['payment_per_week'] = selected_job_data.apply(
             lambda x: float(x['job_median_payment']) / 12
             if x['pay_period'] == 'yr'
             else float(x['job_median_payment']), axis=1)
 
+        # this would be better do exist a different column
+        selected_job_data['timestamp'] = selected_job_data.apply(lambda t: str(t['timestamp']).split(" ")[0], axis=1)
+
         return px.bar(
             data_frame=selected_job_data,
             x="country",
             y="payment_per_week",
-            color='sample_size'
+            color='timestamp',
+            barmode='group',
+            text='sample_size'
         ).update_layout({
             'plot_bgcolor': 'rgba(0, 0, 0, 0)',
             'paper_bgcolor': 'rgba(0, 0, 0, 0)',
             'font_color': '#fff'
-            }
+        }
         )
 
 
@@ -124,11 +129,11 @@ app.layout = html.Div(
                         generate_section_banner("Filter Per Date & Job"),
                         dcc.DatePickerRange(
                             id='my-date-picker-range',
-                            min_date_allowed=date(2022, 4, 20),  # start date of data is 2022-04-20
+                            min_date_allowed=START_DATE,
                             max_date_allowed=date.today(),
                             initial_visible_month=date.today(),
                             display_format='Y-MM-DD',
-                            start_date=date(2022, 4, 20),
+                            start_date=START_DATE,
                             end_date=date.today()
                         ),
                     ],
@@ -198,7 +203,7 @@ def update_values_and_charts(job_type, btn, start_date, end_date):
 
     if 'btn-submit' in changed_id:
         try:
-            return salary_chart_bar(job_type), {'width': "100%", 'display': 'inline-block'}
+            return salary_chart_bar(end_date, start_date, job_type), {'width': "100%", 'display': 'inline-block'}
         except KeyError:
             return no_update, no_update, no_update, no_update
     else:
