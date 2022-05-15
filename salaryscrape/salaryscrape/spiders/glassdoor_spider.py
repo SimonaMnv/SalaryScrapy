@@ -10,7 +10,9 @@ from ..items import CompanySalary
 import logging
 import re
 
-from salaryscrape.salaryscrape.utils.secrets_config import config
+from salaryscrape.utils.secrets_config import config
+from utils.local_payment_to_eur import local_revenue_to_eur
+
 
 JOBS = ["data-engineer-", "data-scientist-", "software-engineer-"]
 
@@ -72,7 +74,11 @@ class GlassDoor(InitSpider):
                                      meta={'country': str(country_k).split("_")[0]})
 
     def salary_parse(self, response):
-        """ clean & parse the data to fetch only what's required """
+        """
+        clean & parse the data to fetch only what's required.
+        also, get the lat & lon based on the country.
+        also, transform the country's local currency to euro so they all have the same currency type
+        """
         salary = CompanySalary()
 
         main_page = json.loads(response.xpath('//script[@type="application/ld+json"]//text()').extract_first())
@@ -80,9 +86,16 @@ class GlassDoor(InitSpider):
         r = requests.get(self.cords_api + response.meta['country'])
         lat_lon = r.json()
 
+        local_currency_to_eur = local_revenue_to_eur(
+            main_page["estimatedSalary"][0]["currency"],
+            main_page["estimatedSalary"][0]["median"],
+            str(datetime.datetime.today().strftime('%Y-%m-%d'))
+        )
+
         print(f'crawling URL: {response.url}')
 
         salary['timestamp'] = str(datetime.datetime.now())
+        salary['updated_at'] = str(datetime.datetime.today().strftime('%Y-%m-%d'))
         salary['location'] = re.search('(?:.*?\/){4}([^\/-]+)', str(response.url))[1]
         salary['country'] = response.meta['country']
         salary['lat'] = lat_lon['data'][0]['latitude']
@@ -92,6 +105,7 @@ class GlassDoor(InitSpider):
         salary['job_median_payment'] = main_page["estimatedSalary"][0]["median"]
         salary['job_percentile90_payment'] = main_page["estimatedSalary"][0]["percentile90"]
         salary['location_currency'] = main_page["estimatedSalary"][0]["currency"]
+        salary['job_median_to_eur'] = str(local_currency_to_eur)
         salary['sample_size'] = main_page["sampleSize"]
         salary['pay_period'] = re.search('(?<=\/<!-- -->)(.*?)(?=\<)',
                                          str(response.xpath('//span[contains(@class, "css-18stkbk")]')[2].extract()))[0]

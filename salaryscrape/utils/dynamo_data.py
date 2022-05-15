@@ -45,6 +45,7 @@ class DynamoData:
                     Attr(job_title_key).eq(job_title_key_val) &
                     Attr(date_key).between(start_date, end_date)
                 )
+                print(pd.DataFrame.from_dict(dynamodb_data['Items']))
             else:
                 dynamodb_data = table.scan()
         except ClientError:
