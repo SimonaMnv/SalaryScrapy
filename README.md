@@ -37,8 +37,8 @@ This project uses a connection to AWS DynamoDB to store the data in.
    - When we post a request at ```/crawl```, the spider is triggered and then the scheduler takes over to keep triggering it 
    - The crawling is scheduled once every 2 weeks to get up-to-date date plus gather historical data
 
-# Map Visualization
-Run the visualization with: streamlit run visualization.py
+# Visualization
+Run visualization.py
 
 # How to run
  - To run locally simply change ```SPIDER_MODULES``` & ```NEWSPIDER_MODULE``` & ```ITEM_PIPELINES``` in ```settings.py``` to ```salaryscrape.spiders```
