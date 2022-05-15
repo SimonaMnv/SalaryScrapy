@@ -37,13 +37,16 @@ This project uses a connection to AWS DynamoDB to store the data in.
    - When we post a request at ```/crawl```, the spider is triggered and then the scheduler takes over to keep triggering it 
    - The crawling is scheduled once every 2 weeks to get up-to-date date plus gather historical data
 
+# Visualization
+Run visualization.py
+
 # How to run
  - To run locally simply change ```SPIDER_MODULES``` & ```NEWSPIDER_MODULE``` & ```ITEM_PIPELINES``` in ```settings.py``` to ```salaryscrape.spiders```
  and the same for ```default``` in ```scrapy.cfg```. Then run ```scrapy crawl glassdoor_spider``` while in the scrapy dir
  - To run in heroku, simply deploy it and run once the `````/crawl````` endpoint. Make sure to have all env variables as described above
- - More jobs/countries can be added in 
+ - More jobs/countries can be added in ```salaryscrape/utils/country_codes.json```
 
-# TODO: 
-1. Add in Streamlit UI
-2. Unit tests 
-3. Add circleci for 1) linting 2) black lib 3) unit tests
+# TODO:
+1. Unit tests 
+2. Add circleci for 1) linting 3) unit tests
+3. [future perf] Use .query instead of .scan in the first 2 cases -> https://stackoverflow.com/questions/65282731/dynamodb-select-specific-attributes-using-boto3
