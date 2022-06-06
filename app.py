@@ -14,6 +14,11 @@ scheduler.start()
 
 @app.route('/', methods=['GET'])
 def home():
+    return jsonify({str(datetime.datetime.now()): ' '}), 200
+
+
+@app.route('/crawl', methods=['GET'])
+def home():
     call(["scrapy", 'crawl', 'glassdoor_spider'], cwd='/app/salaryscrape')
 
 
