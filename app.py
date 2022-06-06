@@ -20,6 +20,7 @@ def home():
 @app.route('/crawl', methods=['GET'])
 def crawl():
     call(["scrapy", 'crawl', 'glassdoor_spider'], cwd='/app/salaryscrape')
+    return jsonify({str(datetime.datetime.now()): 'crawl job started now'}), 200
 
 
 def run_spider():
