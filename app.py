@@ -1,6 +1,5 @@
 from datetime import date
 
-import pandas as pd
 from dash import dcc, no_update, State
 import plotly.graph_objects as go
 import dash as dash
@@ -76,30 +75,30 @@ def generate_section_banner(title):
     return html.Div(className="section-banner", children=title)
 
 
-def salary_map():
-    salary_data = data.get_dynamodb_data()
-
-    salary_data["lon"] = pd.to_numeric(salary_data["lon"])
-    salary_data["lat"] = pd.to_numeric(salary_data["lat"])
-
-    #  px.choropleth
-    fig = go.Figure(px.scatter_mapbox(salary_data, lat="lat", lon="lon", hover_name="country",
-                                      color_discrete_sequence=["red"], zoom=5, height=450))
-    fig.update_layout(
-        mapbox_style="white-bg",
-        mapbox_layers=[
-            {
-                "below": 'traces',
-                "sourcetype": "raster",
-                "sourceattribution": "United States Geological Survey",
-                "source": [
-                    "https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}"
-                ]
-            }
-        ])
-    fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
-
-    return dcc.Graph(id="map_chart", figure=fig)
+# def salary_map():
+#     salary_data = data.get_dynamodb_data()
+#
+#     salary_data["lon"] = pd.to_numeric(salary_data["lon"])
+#     salary_data["lat"] = pd.to_numeric(salary_data["lat"])
+#
+#     #  px.choropleth
+#     fig = go.Figure(px.scatter_mapbox(salary_data, lat="lat", lon="lon", hover_name="country",
+#                                       color_discrete_sequence=["red"], zoom=5, height=450))
+#     fig.update_layout(
+#         mapbox_style="white-bg",
+#         mapbox_layers=[
+#             {
+#                 "below": 'traces',
+#                 "sourcetype": "raster",
+#                 "sourceattribution": "United States Geological Survey",
+#                 "source": [
+#                     "https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}"
+#                 ]
+#             }
+#         ])
+#     fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
+#
+#     return dcc.Graph(id="map_chart", figure=fig)
 
 
 def get_unique_jobs():
