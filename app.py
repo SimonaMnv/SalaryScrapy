@@ -31,7 +31,7 @@ scheduler.init_app(app)
 scheduler.start()
 
 
-@app.route('/wake_up')
+@server.route('/wake_up')
 def wake_up():
     """ heroku app sleeps on the free tier """
     return jsonify({str(datetime.datetime.now()): 'crawl job started'}), 200
@@ -42,7 +42,7 @@ def run_spider():
     call(["scrapy", 'crawl', 'glassdoor_spider'], cwd='/app/salaryscrape')
 
 
-@app.route('/scheduled_crawl')
+@server.route('/scheduled_crawl')
 def add_tasks():
     """ create a scheduler to execute the spider weekly - one unique id running at a time """
     app.apscheduler.add_job(func=run_spider, trigger='cron', day_of_week='tue', hour='17', minute='01',
