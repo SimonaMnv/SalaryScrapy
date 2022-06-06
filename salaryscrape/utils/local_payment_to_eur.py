@@ -1,7 +1,7 @@
 import requests
 
 
-def local_revenue_to_usd(local_currency, local_price, date):
+def local_revenue_to_eur(local_currency, local_price, date):
     """
     Convert local currency to EUR. No API key needed.
     Example: https://api.exchangerate.host/convert?from=RUB&to=EUR&date=2022-05-02&amount=1000

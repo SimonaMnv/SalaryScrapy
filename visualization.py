@@ -1,7 +1,7 @@
-from datetime import date, timedelta
+from datetime import date
 
 import pandas as pd
-from dash import dcc, no_update
+from dash import dcc, no_update, State
 import plotly.graph_objects as go
 import dash as dash
 from dash import html
@@ -10,7 +10,6 @@ import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
 
 from salaryscrape.utils.dynamo_data import DynamoData
-from salaryscrape.utils.local_payment_to_eur import local_revenue_to_usd
 
 app = dash.Dash(
     __name__,
@@ -20,11 +19,12 @@ app = dash.Dash(
 
 # get data from Amazon DynamoDB
 data = DynamoData()
-START_DATE = date(2022, 4, 20)  # The date the data started being collected. Used on the date-picker too
+START_DATE = date(2022, 5, 15)  # The date the data started being collected. Used on the date-picker too
 
-# todo: add to the top right: 1) update rate 2) last updated
-# todo: fix to show something when applying without a job selected
-# todo: use local_revenue_to_usd when crawling to add a new colum called "currency_to_eur"
+
+# todo[1]: add to the top right: 1) update rate 2) last updated
+# todo[2.1]: add in circleci (1. linting, 2. unit tests)
+# todo[2.2]: test the currency converter API, check that it is up and also mock test it
 
 
 # top banner
@@ -83,31 +83,29 @@ def get_unique_jobs():
 def salary_chart_bar(end_date, start_date, selected_job_title=None):
     """
     Normalize the values to be per week if they are not.
-    Plot the bar-chart based on the selected profession from the dd. Also remote the seconds info from the timesttamp
+    Plot the bar-chart based on the selected profession from the dd.
     """
     if selected_job_title:
-        selected_job_data = data.get_dynamodb_data("job_title", "timestamp", selected_job_title, end_date, start_date)
+        selected_job_data = data.get_dynamodb_data("job_title", "updated_at", selected_job_title, end_date, start_date)
 
-        selected_job_data['payment_per_week'] = selected_job_data.apply(
-            lambda x: float(x['job_median_payment']) / 12
+        selected_job_data['job_median_to_eur'] = selected_job_data.apply(
+            lambda x: float(x['job_median_to_eur']) / 12
             if x['pay_period'] == 'yr'
-            else float(x['job_median_payment']), axis=1)
-
-        # this would be better do exist a different column
-        selected_job_data['timestamp'] = selected_job_data.apply(lambda t: str(t['timestamp']).split(" ")[0], axis=1)
+            else float(x['job_median_to_eur']), axis=1)
 
         return px.bar(
             data_frame=selected_job_data,
             x="country",
-            y="payment_per_week",
-            color='timestamp',
+            y="job_median_to_eur",
+            color='updated_at',
             barmode='group',
             text='sample_size'
-        ).update_layout({
-            'plot_bgcolor': 'rgba(0, 0, 0, 0)',
-            'paper_bgcolor': 'rgba(0, 0, 0, 0)',
-            'font_color': '#fff'
-        }
+        ).update_layout(
+            {
+                'plot_bgcolor': 'rgba(0, 0, 0, 0)',
+                'paper_bgcolor': 'rgba(0, 0, 0, 0)',
+                'font_color': '#fff'
+            }
         )
 
 
@@ -138,6 +136,14 @@ app.layout = html.Div(
                         ),
                     ],
                 ),
+                html.Div([
+                    dbc.Alert(
+                        "You must select a job",
+                        id='job-missing-alert',
+                        color="danger",
+                        is_open=False
+                    )
+                ]),
                 html.Div(
                     id='profession-filter-dd',
                     children=[
@@ -188,27 +194,34 @@ app.layout = html.Div(
     [
         Output('salary-chart-bar', 'figure'),
         Output('salary-chart-bar', 'style'),
+        Output('job-missing-alert', 'is_open')
     ],
     [
-        Input("profession_type", "value"),
+        Input("profession_type", 'value'),
         Input('btn-submit', 'n_clicks'),
         Input('my-date-picker-range', 'start_date'),
         Input('my-date-picker-range', 'end_date')
     ],
+    [
+        State('job-missing-alert', 'is_open')
+    ]
 )
-def update_values_and_charts(job_type, btn, start_date, end_date):
+def update_values_and_charts(job_type, btn, start_date, end_date, is_open):
     """ if button is clicked, unhide and generate bar chart based on selected options, if not then return an empty and
-    hidden bar-chart """
+    hidden bar-chart. Also, if a job is not selected then return a popup message """
     changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
 
     if 'btn-submit' in changed_id:
-        try:
-            return salary_chart_bar(end_date, start_date, job_type), {'width': "100%", 'display': 'inline-block'}
-        except KeyError:
-            return no_update, no_update, no_update, no_update
+        if job_type:
+            try:
+                return salary_chart_bar(end_date, start_date, job_type), {'width': "100%", 'display': 'inline-block'}, False
+            except KeyError:
+                return no_update, no_update, no_update
+        else:
+            return no_update, no_update, True
     else:
         return no_update
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=True, port=8051)

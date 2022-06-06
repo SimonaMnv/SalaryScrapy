@@ -10,8 +10,8 @@ import requests
 
 BOT_NAME = 'salaryscrape'
 
-SPIDER_MODULES = ['salaryscrape.salaryscrape.spiders']
-NEWSPIDER_MODULE = 'salaryscrape.salaryscrape.spiders'
+SPIDER_MODULES = ['salaryscrape.spiders']
+NEWSPIDER_MODULE = 'salaryscrape.spiders'
 
 SPIDER_LOADER_CLASS = "scrapy.spiderloader.SpiderLoader"
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
@@ -45,14 +45,14 @@ def get_proxies(proxy_endpoint):
     return proxies
 
 
-ROTATING_PROXY_LIST = get_proxies("https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt")
+# ROTATING_PROXY_LIST = get_proxies("https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt")
 
 USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64)"
 
-DOWNLOADER_MIDDLEWARES = {
-    'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
-    'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
-}
+# DOWNLOADER_MIDDLEWARES = {
+#     'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
+#     'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
+# }
 
 # Disable cookies (enabled by default)
 # COOKIES_ENABLED = False
@@ -87,7 +87,7 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'salaryscrape.salaryscrape.pipelines.SalaryscrapePipeline': 300,
+   'salaryscrape.pipelines.SalaryscrapePipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

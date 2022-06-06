@@ -1,6 +1,6 @@
 # Salary Scrapy 
 This project crawls through Glassdoor and analyzes the salaries per profession and country.
-The proffession is simply declared in the ```glassdoor_spider.py``` in an array and the countries 
+The profession is simply declared in the ```glassdoor_spider.py``` in an array and the countries 
 are located in ```utils/country_codes.json```. More can be added in both
 
 # Crawler
@@ -36,6 +36,10 @@ This project uses a connection to AWS DynamoDB to store the data in.
 # Scheduler
    - When we post a request at ```/crawl```, the spider is triggered and then the scheduler takes over to keep triggering it 
    - The crawling is scheduled once every 2 weeks to get up-to-date date plus gather historical data
+
+# Core Scrape Architecture
+<img width="878" alt="Screenshot 2022-05-15 at 20 34 54" src="https://user-images.githubusercontent.com/59322298/168486439-fb27cec7-1e81-4034-9573-c6ee634aa770.png">
+
 
 # Visualization
 Run visualization.py
