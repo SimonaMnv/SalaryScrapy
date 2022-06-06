@@ -31,6 +31,12 @@ scheduler.init_app(app)
 scheduler.start()
 
 
+@app.route('/wake_up')
+def wake_up():
+    """ heroku app sleeps on the free tier """
+    return jsonify({str(datetime.datetime.now()): 'crawl job started'}), 200
+
+
 def run_spider():
     """ run the spider inside the heroku container """
     call(["scrapy", 'crawl', 'glassdoor_spider'], cwd='/app/salaryscrape')
