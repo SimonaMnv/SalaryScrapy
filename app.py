@@ -25,6 +25,8 @@ app = dash.Dash(
     meta_tags=[{'name': 'viewport', 'content': 'width=device-width, initial-scale=1'}]
 )
 
+server = app.server
+
 # scheduler and crawling part of the Flask App
 scheduler = APScheduler()
 scheduler.init_app(app)
@@ -252,4 +254,4 @@ def update_values_and_charts(job_type, btn, start_date, end_date, is_open):
 
 if __name__ == '__main__':
     debug = False if config['ENV'] == 'prod' else True
-    app.run_server(debug=debug, host='0.0.0.0', port=int(os.environ.get('PORT')))
+    app.run_server(debug=debug)
