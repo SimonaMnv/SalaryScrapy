@@ -18,7 +18,7 @@ def home():
 
 
 @app.route('/crawl', methods=['GET'])
-def home():
+def crawl():
     call(["scrapy", 'crawl', 'glassdoor_spider'], cwd='/app/salaryscrape')
 
 
