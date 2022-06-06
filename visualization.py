@@ -1,7 +1,7 @@
-from datetime import date, timedelta
+from datetime import date
 
 import pandas as pd
-from dash import dcc, no_update
+from dash import dcc, no_update, State
 import plotly.graph_objects as go
 import dash as dash
 from dash import html
@@ -136,6 +136,14 @@ app.layout = html.Div(
                         ),
                     ],
                 ),
+                html.Div([
+                    dbc.Alert(
+                        "You must select a job",
+                        id='job-missing-alert',
+                        color="danger",
+                        is_open=False
+                    )
+                ]),
                 html.Div(
                     id='profession-filter-dd',
                     children=[
@@ -186,27 +194,34 @@ app.layout = html.Div(
     [
         Output('salary-chart-bar', 'figure'),
         Output('salary-chart-bar', 'style'),
+        Output('job-missing-alert', 'is_open')
     ],
     [
-        Input("profession_type", "value"),
+        Input("profession_type", 'value'),
         Input('btn-submit', 'n_clicks'),
         Input('my-date-picker-range', 'start_date'),
         Input('my-date-picker-range', 'end_date')
     ],
+    [
+        State('job-missing-alert', 'is_open')
+    ]
 )
-def update_values_and_charts(job_type, btn, start_date, end_date):
+def update_values_and_charts(job_type, btn, start_date, end_date, is_open):
     """ if button is clicked, unhide and generate bar chart based on selected options, if not then return an empty and
-    hidden bar-chart """
+    hidden bar-chart. Also, if a job is not selected then return a popup message """
     changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
 
     if 'btn-submit' in changed_id:
-        try:
-            return salary_chart_bar(end_date, start_date, job_type), {'width': "100%", 'display': 'inline-block'}
-        except KeyError:
-            return no_update, no_update, no_update, no_update
+        if job_type:
+            try:
+                return salary_chart_bar(end_date, start_date, job_type), {'width': "100%", 'display': 'inline-block'}, False
+            except KeyError:
+                return no_update, no_update, no_update
+        else:
+            return no_update, no_update, True
     else:
         return no_update
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=True, port=8051)
