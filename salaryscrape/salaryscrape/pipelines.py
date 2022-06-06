@@ -3,7 +3,7 @@ import os
 
 import boto3
 
-from salaryscrape.utils.secrets_config import config
+from salaryscrape.salaryscrape.utils.secrets_config import config
 
 if config['ENV'] == 'prod':
     dynamoDB_access_key = config['dynamoDB_access_key']
