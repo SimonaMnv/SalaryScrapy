@@ -10,7 +10,7 @@ from ..items import CompanySalary
 import logging
 import re
 
-from salaryscrape.utils.secrets_config import config
+from salaryscrape.salaryscrape.utils.secrets_config import config
 from utils.local_payment_to_eur import local_revenue_to_eur
 
 
