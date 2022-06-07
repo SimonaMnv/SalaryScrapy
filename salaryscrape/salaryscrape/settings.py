@@ -6,7 +6,7 @@
 #     https://docs.scrapy.org/en/latest/topics/settings.html
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-import requests
+from salaryscrape.utils.proxy_checker import getproxies, check_proxy
 
 BOT_NAME = 'salaryscrape'
 
@@ -39,12 +39,12 @@ CONCURRENT_REQUESTS_PER_DOMAIN = 64
 # ROTATING_PROXY_PAGE_RETRY_TIMES = 100
 
 
-def get_proxies(proxy_endpoint):
-    r = requests.get(proxy_endpoint)
-    proxies = r.text.split("\n")
-    proxies = [x for x in proxies if x]
-    print("Proxies:", proxies)
-    return proxies
+# def get_proxies(proxy_endpoint):
+#     r = requests.get(proxy_endpoint)
+#     proxies = r.text.split("\n")
+#     proxies = [x for x in proxies if x]
+#     print("Proxies:", proxies)
+#     return proxies
 
 
 # ROTATING_PROXY_LIST = get_proxies("https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt")
@@ -67,16 +67,18 @@ DOWNLOADER_MIDDLEWARES = {
     'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
 }
 
-PROXY_LIST = get_proxies("https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt")
+# PROXY_LIST = get_proxies("https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt")
 
 # Proxy mode
 # 0 = Every requests have different proxy
 # 1 = Take only one proxy from the list and assign it to every requests
 # 2 = Put a custom proxy to use in the settings
-PROXY_MODE = 1
+PROXY_MODE = 2
 
 # If proxy mode is 2 uncomment this sentence :
-# CUSTOM_PROXY = "http://host1:port"
+some_proxies = getproxies()
+good_proxies = check_proxy(some_proxies)
+CUSTOM_PROXY = "http://{good_proxy}".format(good_proxy=good_proxies[0])
 
 # Disable cookies (enabled by default)
 # COOKIES_ENABLED = False
