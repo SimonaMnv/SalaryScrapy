@@ -36,17 +36,17 @@ def run_spider():
     call(["scrapy", 'crawl', 'glassdoor_spider'], cwd='/app/salaryscrape')
 
 
-@server.route('/crawl')
-def run_spider_manual():
-    """ run the spider inside the heroku container """
-    call(["scrapy", 'crawl', 'glassdoor_spider'], cwd='/app/salaryscrape')
-    return jsonify({str(datetime.datetime.now()): 'manual crawl job started'}), 200
+# @server.route('/crawl')
+# def run_spider_manual():
+#     """ run the spider inside the heroku container """
+#     call(["scrapy", 'crawl', 'glassdoor_spider'], cwd='/app/salaryscrape')
+#     return jsonify({str(datetime.datetime.now()): 'manual crawl job started'}), 200
 
 
 @server.route('/scheduled_crawl')
 def add_tasks():
     """ create a scheduler to execute the spider weekly - one unique id running at a time """
-    app.apscheduler.add_job(func=run_spider, trigger='cron', day_of_week='tue', hour='01', minute='01',
+    app.apscheduler.add_job(func=run_spider, trigger='cron', day_of_week='tue', hour='11', minute='01',
                             id='glassdoor_spider_crawl_job')
     return jsonify({str(datetime.datetime.now()): 'scheduled crawl job started'}), 200
 
