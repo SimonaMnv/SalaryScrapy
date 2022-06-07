@@ -2,7 +2,7 @@ aliases:
   - &system-deps
       name: System dependencies
       command: |
-        sudo apt -y install build-essential libldap2-dev libsasl2-dev
+        sudo apt -y install build-essential libldap2-dev 
   - &install
       name: Install
       command: |
