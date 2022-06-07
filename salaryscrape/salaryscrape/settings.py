@@ -31,10 +31,12 @@ CONCURRENT_REQUESTS = 64
 DOWNLOAD_DELAY = 0
 # The download delay setting will honor only one of:
 CONCURRENT_REQUESTS_PER_DOMAIN = 64
+
+
 # CONCURRENT_REQUESTS_PER_IP = 16
 
-# PROXY settings
-ROTATING_PROXY_PAGE_RETRY_TIMES = 100
+# # PROXY settings #1
+# ROTATING_PROXY_PAGE_RETRY_TIMES = 100
 
 
 def get_proxies(proxy_endpoint):
@@ -45,14 +47,36 @@ def get_proxies(proxy_endpoint):
     return proxies
 
 
-ROTATING_PROXY_LIST = get_proxies("https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt")
+# ROTATING_PROXY_LIST = get_proxies("https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt")
+#
+# USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64)"
+#
+# DOWNLOADER_MIDDLEWARES = {
+#     'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
+#     'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
+# }
 
-USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64)"
+# PROXY settings #2
+RETRY_TIMES = 100
+# Retry on most error codes since proxies fail for different reasons
+RETRY_HTTP_CODES = [500, 503, 504, 400, 403, 404, 408]
 
 DOWNLOADER_MIDDLEWARES = {
-    'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
-    'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
+    'scrapy.downloadermiddlewares.retry.RetryMiddleware': 90,
+    'scrapy_proxies.RandomProxy': 100,
+    'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
 }
+
+PROXY_LIST = get_proxies("https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt")
+
+# Proxy mode
+# 0 = Every requests have different proxy
+# 1 = Take only one proxy from the list and assign it to every requests
+# 2 = Put a custom proxy to use in the settings
+PROXY_MODE = 1
+
+# If proxy mode is 2 uncomment this sentence :
+# CUSTOM_PROXY = "http://host1:port"
 
 # Disable cookies (enabled by default)
 # COOKIES_ENABLED = False
@@ -87,7 +111,7 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'salaryscrape.salaryscrape.pipelines.SalaryscrapePipeline': 300,
+    'salaryscrape.salaryscrape.pipelines.SalaryscrapePipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
