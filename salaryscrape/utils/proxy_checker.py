@@ -31,13 +31,10 @@ def check_proxy(proxy_addr: str):
             )
             res.raise_for_status()
             good_proxies.add(proxy)
-        except Exception as err:
+        except Exception:
             pass
 
     return good_proxies
-
-
-proxies = getproxies()
 
 # if __name__ == "__main__":
 #     good_proxies = set()
