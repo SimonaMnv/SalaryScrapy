@@ -8,7 +8,7 @@ from scrapy.utils.project import get_project_settings
 to run:
     scraper = GlassdoorScraper(GlassDoor)
     scraper.run_spider()
-    
+
     while not scraper.is_closed:
     continue
 """
