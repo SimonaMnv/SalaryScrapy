@@ -45,7 +45,7 @@ def get_proxies(proxy_endpoint):
     return proxies
 
 
-# ROTATING_PROXY_LIST = get_proxies("https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt")
+ROTATING_PROXY_LIST = get_proxies("https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt")
 
 USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64)"
 
