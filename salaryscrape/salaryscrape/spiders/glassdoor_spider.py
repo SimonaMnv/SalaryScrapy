@@ -11,7 +11,7 @@ import logging
 import re
 
 from salaryscrape.salaryscrape.utils.secrets_config import config
-from dash_utils import local_revenue_to_eur
+from utils import local_revenue_to_eur
 
 
 JOBS = ["data-engineer-", "data-scientist-", "software-engineer-"]
