@@ -78,7 +78,7 @@ PROXY_MODE = 2
 # If proxy mode is 2 uncomment this sentence :
 some_proxies = getproxies()
 good_proxies = check_proxy(some_proxies)
-CUSTOM_PROXY = "http://{good_proxy}".format(good_proxy=good_proxies[0])
+CUSTOM_PROXY = "http://{good_proxy}".format(good_proxy=good_proxies.pop())
 
 # Disable cookies (enabled by default)
 # COOKIES_ENABLED = False
