@@ -21,3 +21,7 @@ class CheckExternalAPIs(unittest.TestCase):
         r = requests.get(self.cords_api + 'greece')
         lat_lon = r.json()
         self.assertTrue(lat_lon['data'][0]['latitude'] == '39.78331')
+
+    def tearDown(self) -> None:
+        """ bye bye """
+        print("tearDown is running")
