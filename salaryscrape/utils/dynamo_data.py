@@ -1,7 +1,7 @@
 import json
 
 import boto3
-from boto3.dynamodb.conditions import Key, Attr
+from boto3.dynamodb.conditions import Attr
 
 import pandas as pd
 from botocore.exceptions import ClientError
@@ -42,8 +42,7 @@ class DynamoData:
             if job_title_key and job_title_key_val and date_key and end_date and start_date:
                 dynamodb_data = table.scan(
                     FilterExpression=
-                    Attr(job_title_key).eq(job_title_key_val) &
-                    Attr(date_key).between(start_date, end_date)
+                    Attr(job_title_key).eq(job_title_key_val) & Attr(date_key).between(start_date, end_date)
                 )
                 # print(pd.DataFrame.from_dict(dynamodb_data['Items']))
             else:

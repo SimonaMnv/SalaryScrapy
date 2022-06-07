@@ -1,2 +1,3 @@
 [flake8]
+exclude = salaryscrape/salaryscrape
 max-line-length = 120
