@@ -25,7 +25,7 @@ ROBOTSTXT_OBEY = False
 LOG_ENABLED = True
 LOG_LEVEL = "INFO"
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-CONCURRENT_REQUESTS = 64
+CONCURRENT_REQUESTS = 300
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
@@ -69,7 +69,8 @@ DOWNLOADER_MIDDLEWARES = {
     'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
 }
 
-PROXY_LIST = get_proxies("https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt")
+PROXY_LIST = get_proxies("https://raw.githubusercontent.com/SimonaMnv/SalaryScrapy/proxies/helpers/proxies?token"
+                         "=GHSAT0AAAAAABQUEAD5NNWZ4BJ4ZKESX2EYYVAQSMQ")
 
 # Proxy mode
 # 0 = Every requests have different proxy
@@ -118,7 +119,7 @@ ITEM_PIPELINES = {
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
-# AUTOTHROTTLE_ENABLED = True
+AUTOTHROTTLE_ENABLED = False
 # The initial download delay
 # AUTOTHROTTLE_START_DELAY = 5
 # The maximum download delay to be set in case of high latencies
