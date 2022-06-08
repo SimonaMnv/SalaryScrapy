@@ -25,7 +25,7 @@ ROBOTSTXT_OBEY = False
 LOG_ENABLED = True
 LOG_LEVEL = "INFO"
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-CONCURRENT_REQUESTS = 300
+CONCURRENT_REQUESTS = 400
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
@@ -48,9 +48,9 @@ def get_proxies(proxy_endpoint):
     return proxies
 
 
-ROTATING_PROXY_LIST = get_proxies("https://gist.githubusercontent.com/SimonaMnv/40cc57653e1d14b13ba269bcbce6c567/raw"
-                                  "/628b3a43c066719f84829721b2aaa41e79a6c41f/gistfile1.txt")
-# ("https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt")
+ROTATING_PROXY_LIST = get_proxies("https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt")
+# "https://gist.githubusercontent.com/SimonaMnv/40cc57653e1d14b13ba269bcbce6c567/raw"
+#                               "/628b3a43c066719f84829721b2aaa41e79a6c41f/gistfile1.txt")
 
 USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64)"
 
