@@ -9,5 +9,3 @@ venv
 .pytest_cache
 
 creds.json
-
-helpers/
