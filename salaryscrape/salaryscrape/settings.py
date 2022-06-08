@@ -70,7 +70,7 @@ DOWNLOADER_MIDDLEWARES = {
 }
 
 # PROXY_LIST = get_proxies("")
-PROXY_LIST = 'proxies.txt'
+PROXY_LIST = '/app/salaryscrape/salaryscrape/proxies.txt'
 
 # Proxy mode
 # 0 = Every requests have different proxy
