@@ -8,7 +8,7 @@
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 import requests
 
-from salaryscrape.utils.proxy_checker import getproxies, check_proxy
+# from salaryscrape.utils.proxy_checker import getproxies, check_proxy
 
 BOT_NAME = 'salaryscrape'
 
@@ -34,11 +34,10 @@ DOWNLOAD_DELAY = 0
 # The download delay setting will honor only one of:
 CONCURRENT_REQUESTS_PER_DOMAIN = 64
 
-
 # CONCURRENT_REQUESTS_PER_IP = 16
 
 # # PROXY settings #1
-# ROTATING_PROXY_PAGE_RETRY_TIMES = 100
+ROTATING_PROXY_PAGE_RETRY_TIMES = 100
 
 
 def get_proxies(proxy_endpoint):
@@ -49,35 +48,34 @@ def get_proxies(proxy_endpoint):
     return proxies
 
 
-# ROTATING_PROXY_LIST = get_proxies("https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt")
-#
-# USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64)"
-#
-# DOWNLOADER_MIDDLEWARES = {
-#     'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
-#     'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
-# }
+ROTATING_PROXY_LIST = get_proxies(
+    "https://raw.githubusercontent.com/SimonaMnv/SalaryScrapy/proxies/salaryscrape/salaryscrape/proxies.txt?token"
+    "=GHSAT0AAAAAABQUEAD4I5FV64E2IH46O5HEYVAR22A")
+# ("https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt")
 
-# PROXY settings #2
-RETRY_TIMES = 100
-# Retry on most error codes since proxies.txt fail for different reasons
-RETRY_HTTP_CODES = [503]  # 500, 504, 400, 403, 404, 408]
+USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64)"
 
 DOWNLOADER_MIDDLEWARES = {
-    'scrapy.downloadermiddlewares.retry.RetryMiddleware': 90,
-    'scrapy_proxies.RandomProxy': 100,
-    'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
+    'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
+    'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
 }
 
-# PROXY_LIST = get_proxies("")
-PROXY_LIST = '/app/salaryscrape/salaryscrape/proxies.txt'
+# PROXY settings #2
+# RETRY_TIMES = 100
+# # Retry on most error codes since proxies fail for different reasons
+# RETRY_HTTP_CODES = [503]  # 500, 504, 400, 403, 404, 408]
+#
+# DOWNLOADER_MIDDLEWARES = {
+#     'scrapy.downloadermiddlewares.retry.RetryMiddleware': 90,
+#     'scrapy_proxies.RandomProxy': 100,
+#     'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
+# }
 
 # Proxy mode
 # 0 = Every requests have different proxy
 # 1 = Take only one proxy from the list and assign it to every requests
 # 2 = Put a custom proxy to use in the settings
-PROXY_MODE = 0
-
+# PROXY_MODE = 0
 # If proxy mode is 2 uncomment this sentence :
 # CUSTOM_PROXY = "http://{good_proxy}".format(good_proxy=good.pop())
 
