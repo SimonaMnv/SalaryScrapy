@@ -60,7 +60,7 @@ def get_proxies(proxy_endpoint):
 
 # PROXY settings #2
 RETRY_TIMES = 100
-# Retry on most error codes since proxies fail for different reasons
+# Retry on most error codes since proxies.txt fail for different reasons
 RETRY_HTTP_CODES = [503]  # 500, 504, 400, 403, 404, 408]
 
 DOWNLOADER_MIDDLEWARES = {
@@ -69,8 +69,8 @@ DOWNLOADER_MIDDLEWARES = {
     'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
 }
 
-PROXY_LIST = get_proxies("https://raw.githubusercontent.com/SimonaMnv/SalaryScrapy/proxies/helpers/proxies?token"
-                         "=GHSAT0AAAAAABQUEAD5NNWZ4BJ4ZKESX2EYYVAQSMQ")
+# PROXY_LIST = get_proxies("")
+PROXY_LIST = 'proxies.txt'
 
 # Proxy mode
 # 0 = Every requests have different proxy
