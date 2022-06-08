@@ -48,9 +48,8 @@ def get_proxies(proxy_endpoint):
     return proxies
 
 
-ROTATING_PROXY_LIST = get_proxies(
-    "https://raw.githubusercontent.com/SimonaMnv/SalaryScrapy/proxies/salaryscrape/salaryscrape/proxies.txt?token"
-    "=GHSAT0AAAAAABQUEAD4I5FV64E2IH46O5HEYVAR22A")
+ROTATING_PROXY_LIST = get_proxies("https://gist.githubusercontent.com/SimonaMnv/40cc57653e1d14b13ba269bcbce6c567/raw"
+                                  "/628b3a43c066719f84829721b2aaa41e79a6c41f/gistfile1.txt")
 # ("https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt")
 
 USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64)"
