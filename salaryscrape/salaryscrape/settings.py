@@ -57,15 +57,17 @@ CONCURRENT_REQUESTS_PER_DOMAIN = 64
 # }
 
 # PROXY settings #2
-RETRY_TIMES = 100
-# Retry on most error codes since proxies fail for different reasons
-RETRY_HTTP_CODES = [500, 503, 504, 400, 403, 404, 408]
-
-DOWNLOADER_MIDDLEWARES = {
-    'scrapy.downloadermiddlewares.retry.RetryMiddleware': 90,
-    'scrapy_proxies.RandomProxy': 100,
-    'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
-}
+# # Todo: proxy option 0 won't work. A specific proxy is alive and then instantly dead, change the host domain name and
+# #  try again without proxies?
+# RETRY_TIMES = 10
+# # Retry on most error codes since proxies fail for different reasons
+# RETRY_HTTP_CODES = [500, 503, 504, 400, 403, 404, 408]
+#
+# DOWNLOADER_MIDDLEWARES = {
+#     'scrapy.downloadermiddlewares.retry.RetryMiddleware': 90,
+#     'scrapy_proxies.RandomProxy': 100,
+#     'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
+# }
 
 # PROXY_LIST = get_proxies("https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt")
 
@@ -73,12 +75,10 @@ DOWNLOADER_MIDDLEWARES = {
 # 0 = Every requests have different proxy
 # 1 = Take only one proxy from the list and assign it to every requests
 # 2 = Put a custom proxy to use in the settings
-PROXY_MODE = 2
+# PROXY_MODE = 0
 
 # If proxy mode is 2 uncomment this sentence :
-some_proxies = getproxies()
-good_proxies = check_proxy(some_proxies)
-CUSTOM_PROXY = "http://{good_proxy}".format(good_proxy=good_proxies.pop())
+# CUSTOM_PROXY = "http://{good_proxy}".format(good_proxy=good_proxies.pop())
 
 # Disable cookies (enabled by default)
 # COOKIES_ENABLED = False

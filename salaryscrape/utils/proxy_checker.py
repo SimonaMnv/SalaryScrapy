@@ -37,6 +37,10 @@ def check_proxy(proxy_addr: str):
     return good_proxies
 
 
+proxies = getproxies()
+good = check_proxy(proxies)
+print(good.pop())
+
 # if __name__ == "__main__":
 #     good_proxies = set()
 #     proxies = getproxies()
