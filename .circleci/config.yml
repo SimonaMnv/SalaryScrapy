@@ -12,7 +12,7 @@ aliases:
         eval "$(pyenv init --path)"
         eval "$(pyenv init -)"
         eval "$(pyenv virtualenv-init -)"
-        scripts/install.sh
+        bash scripts/install.sh
 version: 2.1
 jobs:
   build:
@@ -38,7 +38,7 @@ jobs:
             eval "$(pyenv init --path)"
             eval "$(pyenv init -)"
             eval "$(pyenv virtualenv-init -)"
-            scripts/setup_python.sh
+            bash scripts/setup_python.sh
             invoke ci
 workflows:
   build-workflow:
