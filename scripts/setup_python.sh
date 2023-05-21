@@ -30,7 +30,7 @@ if [[ "${WHICH_PY}" == "/usr/bin/python" ]]; then
   exit 1
 fi
 
-PY_VERSION=`python --version 2>&1| cut -d " " -f 2`
+PY_VERSION=`python --version | tail -n 1 | cut -d " " -f 2`
 echo "Python version found: ${PY_VERSION}"
 
 if [[ "${PY_VERSION}" != "${WANTED_VERSION}" ]]; then
