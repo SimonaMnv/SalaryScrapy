@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-scripts/setup_python.sh
+sh scripts/setup_python.sh
 
 pip install --upgrade pip
 
