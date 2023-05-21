@@ -42,7 +42,7 @@ This project uses a connection to AWS DynamoDB to store the data in.
 
 
 # Visualization
-Run app.py locally or visit the heroku link (https://salaryscrape.herokuapp.com/)
+Run app.py locally
 
 # How to run
  - To run locally simply change ```SPIDER_MODULES``` & ```NEWSPIDER_MODULE``` & ```ITEM_PIPELINES``` in ```settings.py``` to ```salaryscrape.spiders```
