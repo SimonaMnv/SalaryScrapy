@@ -17,7 +17,7 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: circleci/python:3.9
+      - image: cimg/python:3.10.3
     working_directory: ~/project
     steps:
       - checkout
@@ -34,7 +34,6 @@ jobs:
       - run:
           name: CI tasks
           command: |
-            ls ~/.pyenv || curl https://pyenv.run | bash
             export PATH="~/.pyenv/bin:$PATH"
             eval "$(pyenv init --path)"
             eval "$(pyenv init -)"
@@ -42,7 +41,7 @@ jobs:
             scripts/setup_python.sh
             invoke ci
 workflows:
-  build-and-deploy:
+  build-workflow:
     jobs:
       - build:
           context:
