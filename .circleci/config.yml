@@ -12,7 +12,6 @@ aliases:
         eval "$(pyenv init --path)"
         eval "$(pyenv init -)"
         eval "$(pyenv virtualenv-init -)"
-        chmod 755 scripts/install.sh
         scripts/install.sh
 version: 2.1
 jobs:
@@ -40,7 +39,6 @@ jobs:
             eval "$(pyenv init --path)"
             eval "$(pyenv init -)"
             eval "$(pyenv virtualenv-init -)"
-            chmod 755 scripts/setup_python.sh
             scripts/setup_python.sh
             invoke ci
 workflows:
