@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
-chmod 755 scripts/setup_python.sh
+source scripts/vars.sh
+
 scripts/setup_python.sh
 
 pip install --upgrade pip
